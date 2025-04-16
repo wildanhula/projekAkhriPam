@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <!-- Toolbar Atas -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/orange"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginTop="37dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/logo"
+            android:contentDescription="App Logo"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/circle_shape"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <ImageView android:layout_width="35dp" android:layout_height="40dp" android:src="@drawable/share"/>
+            <ImageView android:layout_width="35dp" android:layout_height="40dp" android:src="@drawable/save"/>
+            <ImageView android:layout_width="35dp" android:layout_height="40dp" android:src="@drawable/menu"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Gambar Restoran -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:src="@drawable/restoran"
+        android:scaleType="centerCrop"/>
+
+    <!-- Informasi Restoran -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eat Restaurant"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/location"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Jalan Jendral Sudirman, Kota Malang, Indonesia."
+                android:textSize="14sp" android:paddingStart="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="5dp">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/clock"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Senin - Minggu (08.00 - 20.00)"
+                android:textSize="14sp" android:paddingStart="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="5dp">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/money"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Rp. 50.000 - Rp. 100.000 /Orang"
+                android:textSize="14sp" android:paddingStart="5dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Review Section -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Review"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:padding="10dp"/>
+
+    <EditText
+        android:id="@+id/reviewText"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/edittext_outline"
+        android:hint="Tulis review Anda disini..."
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="10dp"
+        android:background="#D35400"
+        android:text="Send"
+        android:textColor="#000000" />
+
+    <!-- Spacer agar Review Section mengisi ruang kosong -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/orange"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true">
+
+        <ImageView android:layout_width="0dp" android:layout_height="35dp" android:layout_weight="1" android:src="@drawable/home"/>
+        <ImageView android:layout_width="0dp" android:layout_height="35dp" android:layout_weight="1" android:src="@drawable/notification"/>
+        <ImageView android:layout_width="0dp" android:layout_height="35dp" android:layout_weight="1" android:src="@drawable/camera"/>
+        <ImageView android:layout_width="0dp" android:layout_height="35dp" android:layout_weight="1" android:src="@drawable/save"/>
+        <ImageView android:layout_width="0dp" android:layout_height="35dp" android:layout_weight="1" android:src="@drawable/profile"/>
+    </LinearLayout>
+
+</LinearLayout>

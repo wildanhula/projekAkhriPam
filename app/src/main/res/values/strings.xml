@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">projectakhir</string>
+    <string name="logo_description">Aplikasi Logo</string>
+    <string name="search_hint">Cari di sini...</string>
+    <string name="fast_food">Makanan Cepat Saji</string>
+    <string name="drinks">Minuman</string>
+    <string name="desserts">Makanan Penutup</string>
+    <string name="explore_food">Jelajahi Makanan dan Minuman di Sekitar Anda</string>
+    <string name="home">Beranda</string>
+    <string name="notification">Notifikasi</string>
+    <string name="camera">Kamera</string>
+    <string name="order">Pesanan</string>
+    <string name="profile">Profil</string>
+    <string name="restaurant_image_desc">Gambar restoran</string>
+    <string name="share_icon">Bagikan restoran ini</string>
+    <string name="like_icon">Suka restoran ini</string>
+    <string name="dislike_icon">Tidak suka restoran ini</string>
+</resources>
