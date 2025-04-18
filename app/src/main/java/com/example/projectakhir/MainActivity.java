@@ -8,24 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Arrays;
 import java.util.List;
-import android.os.Build;
-import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Pastikan status bar muncul, tidak menyembunyikan
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // Untuk Android 11 ke atas
-            getWindow().setDecorFitsSystemWindows(true);
-        } else {
-            // Untuk Android versi lebih rendah
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-
         setContentView(R.layout.activity_main);
 
         // Inisialisasi RecyclerView

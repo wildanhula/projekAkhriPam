@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:fitsSystemWindows="true"
     android:background="@android:color/white">
 
     <!-- Search Bar -->
@@ -14,7 +13,7 @@
         android:background="@color/orange"
         android:padding="12dp"
         android:gravity="center_vertical"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="37dp">
 
         <ImageView
             android:layout_width="48dp"
@@ -247,100 +246,54 @@
     <!-- Bottom Navigation -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="65dp"
         android:background="@color/orange"
         android:orientation="horizontal"
         android:gravity="center"
         android:padding="8dp">
 
-        <!-- HOME - Aktif -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <!-- Active Home Icon (Bigger & Orange) -->
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:src="@drawable/home"
+            android:tint="@android:color/holo_orange_dark"
+            android:contentDescription="Home"/>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/home"
-                android:tint="#FFA500"
-                android:contentDescription="Home" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="12sp"
-                android:textColor="#FFA500" />
-        </LinearLayout>
-
-        <!-- NOTIFICATION -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <!-- Other Icons (Smaller & White) -->
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:src="@drawable/notification"
+            android:tint="@android:color/white"
+            android:contentDescription="Notifications"/>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/notification"
-                android:tint="@android:color/white"
-                android:contentDescription="Notifications" />
-        </LinearLayout>
-
-        <!-- CAMERA -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:src="@drawable/camera"
+            android:tint="@android:color/white"
+            android:contentDescription="Camera"/>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/camera"
-                android:tint="@android:color/white"
-                android:contentDescription="Camera" />
-        </LinearLayout>
-
-        <!-- SAVE -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:src="@drawable/save"
+            android:tint="@android:color/white"
+            android:contentDescription="Save"/>
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/save"
-                android:tint="@android:color/white"
-                android:contentDescription="Save" />
-        </LinearLayout>
-
-        <!-- PROFILE -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/profile"
-                android:tint="@android:color/white"
-                android:contentDescription="Profile" />
-        </LinearLayout>
+            android:src="@drawable/profile"
+            android:tint="@android:color/white"
+            android:contentDescription="Profile"/>
     </LinearLayout>
-
 
 
 </LinearLayout>
