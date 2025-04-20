@@ -1,11 +1,10 @@
 package com.example.projectakhir;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,15 +15,26 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inisialisasi RecyclerView
+        // Inisialisasi semua RecyclerView
+        RecyclerView recyclerCategories = findViewById(R.id.recyclerCategories);
         RecyclerView recyclerExploreFood = findViewById(R.id.recyclerExploreFood);
         RecyclerView recyclerMostlyVisited = findViewById(R.id.recyclerMostlyVisited);
 
-        // Mengatur layout manager agar bisa scroll horizontal
+        // Mengatur layout manager
+        recyclerCategories.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerExploreFood.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerMostlyVisited.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Data untuk RecyclerView
+        // Data untuk kategori menggunakan ArrayList dan add()
+        List<CategoryModel> categoryList = new ArrayList<>();
+        categoryList.add(new CategoryModel(R.drawable.fast_food, "Fast Food"));
+        categoryList.add(new CategoryModel(R.drawable.coffee, "Coffee"));
+        categoryList.add(new CategoryModel(R.drawable.restaurant, "Restaurant"));
+        categoryList.add(new CategoryModel(R.drawable.pasta, "Pasta"));
+        categoryList.add(new CategoryModel(R.drawable.dessert, "Dessert"));
+        categoryList.add(new CategoryModel(R.drawable.noodle, "Noodle"));
+
+        // Data untuk makanan
         List<FoodModel> foodList = Arrays.asList(
                 new FoodModel(R.drawable.restoran, "Spill Pasta", "Pasta dengan berbagai saus spesial"),
                 new FoodModel(R.drawable.restoran, "Resto Jepang", "Aneka sushi dan ramen khas Jepang"),
@@ -35,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Menggunakan adapter untuk menampilkan data
-        FoodAdapter adapter = new FoodAdapter(this, foodList);
-        recyclerExploreFood.setAdapter(adapter);
-        recyclerMostlyVisited.setAdapter(adapter);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this, categoryList);
+        FoodAdapter foodAdapter = new FoodAdapter(this, foodList);
+
+        recyclerCategories.setAdapter(categoryAdapter);
+        recyclerExploreFood.setAdapter(foodAdapter);
+        recyclerMostlyVisited.setAdapter(foodAdapter);
     }
 }

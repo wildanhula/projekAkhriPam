@@ -39,163 +39,13 @@
             android:layout_marginEnd="8dp"/>
     </LinearLayout>
 
-    <!-- Kategori Makanan -->
-    <HorizontalScrollView
+    <!-- Kategori Makanan (Now using RecyclerView) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/orange"
-        android:padding="12dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <!-- Burger -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="fast food"
-                    android:src="@drawable/fast_food"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fast food"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="coffee"
-                    android:src="@drawable/coffee"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Coffee"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <!-- Sushi -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="restaurant"
-                    android:src="@drawable/restaurant"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Restaurant"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <!-- Ice Cream -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="Pasta"
-                    android:src="@drawable/pasta"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pasta"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <!-- Ice Cream -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="Dessert"
-                    android:src="@drawable/dessert"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dessert"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-            <!-- Ice Cream -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="6dp"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:contentDescription="Noodle"
-                    android:src="@drawable/noodle"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Noodle"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:gravity="center"/>
-            </LinearLayout>
-
-        </LinearLayout>
-    </HorizontalScrollView>
+        android:paddingVertical="12dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -252,7 +102,6 @@
         android:gravity="center"
         android:padding="8dp">
 
-        <!-- Active Home Icon (Bigger & Orange) -->
         <ImageView
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -261,7 +110,6 @@
             android:tint="@android:color/holo_orange_dark"
             android:contentDescription="Home"/>
 
-        <!-- Other Icons (Smaller & White) -->
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -294,6 +142,4 @@
             android:tint="@android:color/white"
             android:contentDescription="Profile"/>
     </LinearLayout>
-
-
 </LinearLayout>
