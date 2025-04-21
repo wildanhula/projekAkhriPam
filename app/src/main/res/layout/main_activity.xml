@@ -160,6 +160,7 @@
             android:orientation="vertical"
             android:gravity="center">
             <ImageView
+                android:id="@+id/imgProfil"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/profile"

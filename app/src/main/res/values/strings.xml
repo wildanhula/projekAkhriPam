@@ -16,4 +16,6 @@
     <string name="like_icon">Suka restoran ini</string>
     <string name="dislike_icon">Tidak suka restoran ini</string>
     <string name="save_icon">Save icon</string>
+    <string name="description">description</string>
+    <string name="submit">submit</string>
 </resources>

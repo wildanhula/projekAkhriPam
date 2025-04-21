@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
                 new FoodModel(R.drawable.restoran, "Sate Madura", "Sate ayam khas Madura dengan bumbu kacang")
         );
 
-        // Menggunakan adapter untuk menampilkan data
         CategoryAdapter categoryAdapter = new CategoryAdapter(this, categoryList);
         FoodAdapter foodAdapter = new FoodAdapter(this, foodList);
 
@@ -56,9 +55,15 @@ public class MainActivity extends AppCompatActivity {
         recyclerExploreFood.setAdapter(foodAdapter);
         recyclerMostlyVisited.setAdapter(foodAdapter);
 
-        ImageView imgSave = findViewById(R.id.imgSave);  // Ambil referensi ImageView Save
+        ImageView imgSave = findViewById(R.id.imgSave);
         imgSave.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+            startActivity(intent);
+        });
+
+        ImageView profileIcon = findViewById(R.id.profile_icon);
+        profileIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfilActivity.class);
             startActivity(intent);
         });
     }

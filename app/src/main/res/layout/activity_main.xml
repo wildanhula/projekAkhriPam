@@ -110,6 +110,7 @@
             android:contentDescription="Home"/>
 
         <ImageView
+            android:id="@+id/notification_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_weight="1"
@@ -118,6 +119,7 @@
             android:contentDescription="Notifications"/>
 
         <ImageView
+            android:id="@+id/journal_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_weight="1"
@@ -135,6 +137,7 @@
             android:contentDescription="Save"/>
 
         <ImageView
+            android:id="@+id/profile_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_weight="1"
