@@ -17,8 +17,14 @@ Email : farrel@gmail.com
 Password : inipasswordnya
 
 Login Page    : Wildan
+
 Home Page     : Ghairan
-Edit Profile  : Farrel 
+
+Edit Profile  : Farrel
+
 Bookmark      : Fauzan
+
 Inten         : Agung, Wildan, Ghairan
+
 Reycle View   : Farrel, Fauzan
+
