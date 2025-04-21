@@ -39,7 +39,6 @@
             android:layout_marginEnd="8dp"/>
     </LinearLayout>
 
-    <!-- Kategori Makanan (Now using RecyclerView) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCategories"
         android:layout_width="match_parent"
