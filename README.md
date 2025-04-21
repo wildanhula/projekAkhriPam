@@ -11,5 +11,6 @@ Muhammad Naufal Farrel Azhra – 235150707111021
 Agung Susilo Widodo – 23515070011018
 
 
-Email : 
-Password : 
+Email : farrel@gmail.com
+
+Password : inipasswordnya
