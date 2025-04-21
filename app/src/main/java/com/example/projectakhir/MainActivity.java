@@ -1,9 +1,13 @@
 package com.example.projectakhir;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,5 +55,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerCategories.setAdapter(categoryAdapter);
         recyclerExploreFood.setAdapter(foodAdapter);
         recyclerMostlyVisited.setAdapter(foodAdapter);
+
+        ImageView imgSave = findViewById(R.id.imgSave);  // Ambil referensi ImageView Save
+        imgSave.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+            startActivity(intent);
+        });
     }
 }

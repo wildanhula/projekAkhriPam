@@ -26,6 +26,7 @@
         <activity
             android:name=".RestoranActivity"
             android:exported="false" />
+        <activity android:name=".FavoriteActivity"/>
 
     </application>
 </manifest>
