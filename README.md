@@ -2,7 +2,7 @@ Kontribusi Anggota
 
 A. Wildan Hula Aufa – 235150700111013
 
-EXP Lane 
+Gold Lane 
 
 Ghairan Rahmad Al Ghani – 235150707111017
 
