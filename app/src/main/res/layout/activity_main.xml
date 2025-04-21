@@ -121,9 +121,9 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_weight="1"
-            android:src="@drawable/camera"
+            android:src="@drawable/journal"
             android:tint="@android:color/white"
-            android:contentDescription="Camera"/>
+            android:contentDescription="Journal"/>
 
         <ImageView
             android:layout_width="24dp"
