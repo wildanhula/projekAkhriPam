@@ -18,13 +18,11 @@ Password : inipasswordnya
 
 Login Page    : Wildan
 
-Home Page     : Ghairan
+Home Page     : Ghairan dan Agung
 
 Edit Profile  : Farrel
 
 Bookmark      : Fauzan
 
-Inten         : Agung, Wildan, Ghairan
 
-Reycle View   : Farrel, Fauzan
 
