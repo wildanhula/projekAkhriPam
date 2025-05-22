@@ -22,7 +22,7 @@ import java.util.List;
 public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.OnReviewClickListener {
     private TextView tvNamaLengkap, tvStatus;
     private ImageView profileImage;
-    private Button btnEdit;
+    private Button btnEdit, btnLogout;
     private FloatingActionButton fabAdd;
     private RecyclerView recyclerView;
     private ReviewAdapter reviewAdapter;
@@ -38,13 +38,14 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         tvStatus = findViewById(R.id.tv_status);
         profileImage = findViewById(R.id.imageView3);
         btnEdit = findViewById(R.id.bt_edit);
+        btnLogout = findViewById(R.id.bt_logout); // Tombol Logout
         fabAdd = findViewById(R.id.fab_add);
         recyclerView = findViewById(R.id.recyclerView);
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Inisialisasi data dummy
+        // Data dummy review
         reviewList = new ArrayList<>();
         reviewList.add(new Review("1", "2025/04/06 19:30:38", "Baklava",
                 "Rasanya manis bikin gigi ngilu, Tapi rasanya tetep enak kok!",
@@ -59,7 +60,7 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         reviewAdapter = new ReviewAdapter(reviewList, this);
         recyclerView.setAdapter(reviewAdapter);
 
-        // Setup tombol edit profile
+        // Tombol Edit Profil
         btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, edit_profile.class);
             intent.putExtra("nama", tvNamaLengkap.getText().toString());
@@ -67,13 +68,34 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
             startActivityForResult(intent, 1);
         });
 
-        // Setup FAB tambah review
+        // Tombol Logout
+        btnLogout.setOnClickListener(v -> {
+            new AlertDialog.Builder(ProfilActivity.this)
+                    .setTitle("Logout")
+                    .setMessage("Apakah Anda yakin ingin logout?")
+                    .setPositiveButton("Logout", (dialog, which) -> {
+                        // LOGOUT DARI FIREBASE
+                        com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
+
+                        // Kembali ke halaman login dan hapus semua aktivitas sebelumnya
+                        Intent intent = new Intent(ProfilActivity.this, login_activity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+
+                        Toast.makeText(this, "Anda berhasil logout", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("Batal", null)
+                    .show();
+        });
+
+        // FAB Tambah Review
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, AddReviewActivity.class);
             startActivityForResult(intent, 2);
         });
 
-        // Setup bottom navigation
+        // Bottom Navigation
         setupBottomNavigation();
     }
 
@@ -84,7 +106,6 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         ImageView saveIcon = findViewById(R.id.imgSave);
         ImageView profileIcon = findViewById(R.id.profile_icon);
 
-        // Set profile icon to orange (active)
         profileIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_dark));
 
         homeIcon.setOnClickListener(v -> {
@@ -109,7 +130,7 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         });
 
         profileIcon.setOnClickListener(v -> {
-            // Already in profile, do nothing
+            // Already in profile
         });
     }
 

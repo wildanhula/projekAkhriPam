@@ -81,11 +81,12 @@
         app:layout_constraintTop_toBottomOf="@id/profile_section"/>
 
     <!-- Tombol Edit dan Share -->
+    <!-- Tombol Edit dan Logout -->
     <LinearLayout
         android:id="@+id/layout_edit_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +103,21 @@
             android:text="EDIT PROFIL"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/bt_logout"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:background="@null"
+            android:backgroundTint="#B00020"
+            android:text="LOGOUT"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
             android:textStyle="bold"/>
 
         <ImageView

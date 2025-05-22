@@ -1,6 +1,11 @@
 package com.example.projectakhir;
 
-public class Review {
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+public class Review implements Serializable {
     private String id;
     private String date;
     private String title;
@@ -25,8 +30,11 @@ public class Review {
     public String getMenu() { return menu; }
     public int getImageRes() { return imageRes; }
 
-    // Setter khusus untuk review
-    public void setReview(String review) {
-        this.review = review;
+    // Setters
+    public void setTitle(String title) { this.title = title; }
+    public void setReview(String review) { this.review = review; }
+    public void setMenu(String menu) { this.menu = menu; }
+    public void updateDate() {
+        this.date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date());
     }
 }

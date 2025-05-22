@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="60dp"
-            android:fontFamily="@font/poppins"
+            android:fontFamily="@font/roboto"
             android:gravity="center_horizontal"
             android:text="FOODRATE"
             android:textColor="@color/black"
