@@ -33,19 +33,19 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        // Inisialisasi Views
+        // Initialize Views
         tvNamaLengkap = findViewById(R.id.tv_namalengkap);
         tvStatus = findViewById(R.id.tv_status);
         profileImage = findViewById(R.id.imageView3);
         btnEdit = findViewById(R.id.bt_edit);
-        btnLogout = findViewById(R.id.bt_logout); // Tombol Logout
+        btnLogout = findViewById(R.id.bt_logout);
         fabAdd = findViewById(R.id.fab_add);
         recyclerView = findViewById(R.id.recyclerView);
 
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Data dummy review
+        // Dummy review data
         reviewList = new ArrayList<>();
         reviewList.add(new Review("1", "2025/04/06 19:30:38", "Baklava",
                 "Rasanya manis bikin gigi ngilu, Tapi rasanya tetep enak kok!",
@@ -53,14 +53,14 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         reviewList.add(new Review("2", "2025/04/06 19:32:04", "Coklat",
                 "Coklat terfavorit banyak rasa",
                 "Coklat", R.drawable.coklat));
-        reviewList.add(new Review("2", "2025/04/06 19:32:04", "Bakwan",
+        reviewList.add(new Review("3", "2025/04/06 19:32:04", "Bakwan",
                 "Bakwan rasa yang mantap sekali",
                 "Bakwan", R.drawable.bakwan));
 
         reviewAdapter = new ReviewAdapter(reviewList, this);
         recyclerView.setAdapter(reviewAdapter);
 
-        // Tombol Edit Profil
+        // Edit Profile Button
         btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, edit_profile.class);
             intent.putExtra("nama", tvNamaLengkap.getText().toString());
@@ -68,16 +68,16 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
             startActivityForResult(intent, 1);
         });
 
-        // Tombol Logout
+        // Logout Button
         btnLogout.setOnClickListener(v -> {
             new AlertDialog.Builder(ProfilActivity.this)
                     .setTitle("Logout")
                     .setMessage("Apakah Anda yakin ingin logout?")
                     .setPositiveButton("Logout", (dialog, which) -> {
-                        // LOGOUT DARI FIREBASE
+                        // Firebase logout
                         com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
 
-                        // Kembali ke halaman login dan hapus semua aktivitas sebelumnya
+                        // Return to login screen and clear back stack
                         Intent intent = new Intent(ProfilActivity.this, login_activity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -89,7 +89,7 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
                     .show();
         });
 
-        // FAB Tambah Review
+        // Add Review FAB
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, AddReviewActivity.class);
             startActivityForResult(intent, 2);
@@ -134,11 +134,13 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         });
     }
 
+    // Handle review click
     @Override
     public void onReviewClick(Review review, int position) {
         showEditDialog(review, position);
     }
 
+    // Handle delete click
     @Override
     public void onDeleteClick(Review review, int position) {
         new AlertDialog.Builder(this)
@@ -151,6 +153,13 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    // New: Implement the missing method
+    @Override
+    public void onReviewUpdated(Review review, int position) {
+        // Handle review update (e.g., sync with database)
+        Toast.makeText(this, "Review updated at position " + position, Toast.LENGTH_SHORT).show();
     }
 
     private void showEditDialog(Review review, int position) {
