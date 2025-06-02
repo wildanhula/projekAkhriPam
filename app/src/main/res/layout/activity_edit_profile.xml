@@ -45,39 +45,54 @@
             android:textColor="@color/white"
             android:textSize="18sp" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layoutImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:orientation="vertical">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Unggah foto Anda"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
 
-        <FrameLayout
+        <LinearLayout
+            android:id="@+id/layoutImage"
             android:layout_width="match_parent"
-            android:layout_height="97dp">
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/img_uploadgambar"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="94dp"
-                android:layout_gravity="center_horizontal"
-                android:adjustViewBounds="true"
-                android:focusable="true"
-                android:src="@drawable/photo"
-                android:contentDescription="Upload Gambar" />
-        </FrameLayout>
-    </LinearLayout>
-    <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Unggah foto Anda"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="97dp">
+
+                <ImageView
+                    android:id="@+id/img_uploadgambar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="94dp"
+                    android:layout_gravity="center_horizontal"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Upload Gambar"
+                    android:focusable="true"
+                    android:src="@drawable/photo" />
+
+
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/btn_edit_profile_picture"
+                android:backgroundTint="@color/orange"
+                android:layout_width="108dp"
+                android:layout_height="35dp"
+                android:background="@drawable/rounded_button"
+                android:padding="5dp"
+                android:text="Edit"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

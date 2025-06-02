@@ -1,6 +1,7 @@
 package com.example.projectakhir;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,18 +10,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.OnReviewClickListener {
-    private TextView tvNamaLengkap, tvStatus;
+
+    private TextView tvNamaLengkap, tvStatus, tvDeskripsi;
     private ImageView profileImage;
     private Button btnEdit, btnLogout;
     private FloatingActionButton fabAdd;
@@ -28,24 +39,35 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
     private ReviewAdapter reviewAdapter;
     private List<Review> reviewList;
 
+    // Firebase
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        // Initialize Views
+        // Inisialisasi view
         tvNamaLengkap = findViewById(R.id.tv_namalengkap);
         tvStatus = findViewById(R.id.tv_status);
+        tvDeskripsi = findViewById(R.id.tv_deskripsi); // pastikan kamu punya TextView ini di layout
         profileImage = findViewById(R.id.imageView3);
         btnEdit = findViewById(R.id.bt_edit);
         btnLogout = findViewById(R.id.bt_logout);
         fabAdd = findViewById(R.id.fab_add);
         recyclerView = findViewById(R.id.recyclerView);
 
+        // Inisialisasi Firebase
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://projectakhir-d24d3-default-rtdb.asia-southeast1.firebasedatabase.app/");
+        mDatabase = database.getReference("users");
+
+        // Load profil
+        loadProfileData();
+
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Dummy review data
         reviewList = new ArrayList<>();
         reviewList.add(new Review("1", "2025/04/06 19:30:38", "Baklava",
                 "Rasanya manis bikin gigi ngilu, Tapi rasanya tetep enak kok!",
@@ -60,87 +82,88 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         reviewAdapter = new ReviewAdapter(reviewList, this);
         recyclerView.setAdapter(reviewAdapter);
 
-        // Edit Profile Button
+        // Tombol Edit Profil
         btnEdit.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, edit_profile.class);
             intent.putExtra("nama", tvNamaLengkap.getText().toString());
             intent.putExtra("status", tvStatus.getText().toString());
+            intent.putExtra("deskripsi", tvDeskripsi.getText().toString());
             startActivityForResult(intent, 1);
         });
 
-        // Logout Button
+        // Tombol Logout
         btnLogout.setOnClickListener(v -> {
             new AlertDialog.Builder(ProfilActivity.this)
                     .setTitle("Logout")
                     .setMessage("Apakah Anda yakin ingin logout?")
                     .setPositiveButton("Logout", (dialog, which) -> {
-                        // Firebase logout
-                        com.google.firebase.auth.FirebaseAuth.getInstance().signOut();
-
-                        // Return to login screen and clear back stack
+                        FirebaseAuth.getInstance().signOut();
                         Intent intent = new Intent(ProfilActivity.this, login_activity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
-
                         Toast.makeText(this, "Anda berhasil logout", Toast.LENGTH_SHORT).show();
                     })
                     .setNegativeButton("Batal", null)
                     .show();
         });
 
-        // Add Review FAB
+        // FAB Tambah Review
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, AddReviewActivity.class);
             startActivityForResult(intent, 2);
         });
 
-        // Bottom Navigation
         setupBottomNavigation();
     }
 
-    private void setupBottomNavigation() {
-        ImageView homeIcon = findViewById(R.id.home_icon);
-        ImageView notificationIcon = findViewById(R.id.notification_icon);
-        ImageView journalIcon = findViewById(R.id.journal_icon);
-        ImageView saveIcon = findViewById(R.id.imgSave);
-        ImageView profileIcon = findViewById(R.id.profile_icon);
+    private void loadProfileData() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            mDatabase.child(userId).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String nama = snapshot.child("nama").getValue(String.class);
+                        String status = snapshot.child("status").getValue(String.class);
+                        String deskripsi = snapshot.child("deskripsi").getValue(String.class);
+                        String fotoUrl = snapshot.child("fotoUrl").getValue(String.class);
 
-        profileIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_dark));
+                        tvNamaLengkap.setText(nama);
+                        tvStatus.setText(status);
+                        tvDeskripsi.setText(deskripsi);
 
-        homeIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        });
+                        if (fotoUrl != null && !fotoUrl.isEmpty()) {
+                            // Cek apakah ini URI lokal atau URL online
+                            if (fotoUrl.startsWith("content://") || fotoUrl.startsWith("file://")) {
+                                Glide.with(ProfilActivity.this)
+                                        .load(Uri.parse(fotoUrl))
+                                        .circleCrop()
+                                        .into(profileImage);
+                            } else {
+                                Glide.with(ProfilActivity.this)
+                                        .load(fotoUrl)
+                                        .circleCrop()
+                                        .into(profileImage);
+                            }
+                        }
+                    }
+                }
 
-        notificationIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show();
-        });
-
-        journalIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Journal clicked", Toast.LENGTH_SHORT).show();
-        });
-
-        saveIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, FavoriteActivity.class);
-            startActivity(intent);
-            finish();
-        });
-
-        profileIcon.setOnClickListener(v -> {
-            // Already in profile
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(ProfilActivity.this, "Gagal memuat data profil", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
-    // Handle review click
     @Override
     public void onReviewClick(Review review, int position) {
         showEditDialog(review, position);
     }
 
-    // Handle delete click
     @Override
     public void onDeleteClick(Review review, int position) {
         new AlertDialog.Builder(this)
@@ -155,10 +178,8 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
                 .show();
     }
 
-    // New: Implement the missing method
     @Override
     public void onReviewUpdated(Review review, int position) {
-        // Handle review update (e.g., sync with database)
         Toast.makeText(this, "Review updated at position " + position, Toast.LENGTH_SHORT).show();
     }
 
@@ -192,14 +213,22 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && data != null) {
-            if (requestCode == 1) { // Edit profile
+            if (requestCode == 1) {
                 String updatedNama = data.getStringExtra("nama_baru");
                 String updatedStatus = data.getStringExtra("status_baru");
+                String updatedDeskripsi = data.getStringExtra("deskripsi_baru");
+                String updatedFotoUrl = data.getStringExtra("fotoUrl_baru");
 
                 if (updatedNama != null) tvNamaLengkap.setText(updatedNama);
                 if (updatedStatus != null) tvStatus.setText(updatedStatus);
-
-            } else if (requestCode == 2) { // Add review
+                if (updatedDeskripsi != null) tvDeskripsi.setText(updatedDeskripsi);
+                if (updatedFotoUrl != null && !updatedFotoUrl.isEmpty()) {
+                    Glide.with(this)
+                            .load(updatedFotoUrl)
+                            .circleCrop()
+                            .into(profileImage);
+                }
+            } else if (requestCode == 2) {
                 Review newReview = new Review(
                         data.getStringExtra("id"),
                         data.getStringExtra("date"),
@@ -214,5 +243,40 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
                 recyclerView.smoothScrollToPosition(0);
             }
         }
+    }
+
+    private void setupBottomNavigation() {
+        ImageView homeIcon = findViewById(R.id.home_icon);
+        ImageView notificationIcon = findViewById(R.id.notification_icon);
+        ImageView journalIcon = findViewById(R.id.journal_icon);
+        ImageView saveIcon = findViewById(R.id.imgSave);
+        ImageView profileIcon = findViewById(R.id.profile_icon);
+
+        profileIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_dark));
+
+        homeIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfilActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
+
+        notificationIcon.setOnClickListener(v -> {
+            Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show();
+        });
+
+        journalIcon.setOnClickListener(v -> {
+            Toast.makeText(this, "Journal clicked", Toast.LENGTH_SHORT).show();
+        });
+
+        saveIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfilActivity.this, FavoriteActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        profileIcon.setOnClickListener(v -> {
+            // Sudah di halaman profil
+        });
     }
 }
