@@ -1,148 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    tools:context=".MainActivity">
 
-    <!-- Search Bar -->
+    <!-- Konten utama dibungkus dalam LinearLayout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/orange"
-        android:padding="12dp"
-        android:gravity="center_vertical"
-        android:layout_marginTop="37dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/white">
 
-        <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/logo"
-            android:contentDescription="App Logo"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/circle_shape"
-            android:scaleType="centerCrop"
-            android:clipToOutline="true"/>
-
-        <EditText
-            android:id="@+id/search_bar"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/rounded_edittext"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:hint="Search"
-            android:inputType="text"
-            android:clipToOutline="true"
-            android:padding="12dp"
-            android:layout_marginEnd="8dp"/>
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerCategories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/orange"
-        android:paddingVertical="12dp"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
-
+        <!-- Search Bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
+            android:background="@color/orange"
+            android:padding="12dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="37dp">
 
-            <!-- Explore Food -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Explore Food and Beverage Near You"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:textColor="@android:color/black"/>
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/logo"
+                android:contentDescription="App Logo"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/circle_shape"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerExploreFood"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
-
-            <!-- Mostly Visited -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mostly Visited"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:textColor="@android:color/black"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerMostlyVisited"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+            <EditText
+                android:id="@+id/search_bar"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_edittext"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:hint="Search"
+                android:inputType="text"
+                android:clipToOutline="true"
+                android:padding="12dp"
+                android:layout_marginEnd="8dp"/>
         </LinearLayout>
-    </ScrollView>
 
-    <!-- Bottom Navigation -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        android:background="@color/orange"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="8dp">
+        <!-- RecyclerView untuk kategori -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/orange"
+            android:paddingVertical="12dp"/>
 
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+        <!-- Konten scrollable -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:src="@drawable/home"
-            android:tint="@android:color/holo_orange_dark"
-            android:contentDescription="Home"/>
+            android:fillViewport="true">
 
-        <ImageView
-            android:id="@+id/notification_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:src="@drawable/notification"
-            android:tint="@android:color/white"
-            android:contentDescription="Notifications"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
 
-        <ImageView
-            android:id="@+id/journal_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:src="@drawable/journal"
-            android:tint="@android:color/white"
-            android:contentDescription="Journal"/>
+                <!-- Explore Food -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Explore Food and Beverage Near You"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textColor="@android:color/black"/>
 
-        <ImageView
-            android:id="@+id/imgSave"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:src="@drawable/save"
-            android:tint="@android:color/white"
-            android:contentDescription="Save"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerExploreFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"/>
 
-        <ImageView
-            android:id="@+id/profile_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_weight="1"
-            android:src="@drawable/profile"
-            android:tint="@android:color/white"
-            android:contentDescription="Profile"/>
+                <!-- Mostly Visited -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mostly Visited"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:textColor="@android:color/black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerMostlyVisited"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Bottom Navigation -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:background="@color/orange"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:src="@drawable/home"
+                android:tint="@android:color/holo_orange_dark"
+                android:contentDescription="Home"/>
+
+            <ImageView
+                android:id="@+id/notification_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/notification"
+                android:tint="@android:color/white"
+                android:contentDescription="Notifications"/>
+
+            <ImageView
+                android:id="@+id/journal_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/journal"
+                android:tint="@android:color/white"
+                android:contentDescription="Journal"/>
+
+            <ImageView
+                android:id="@+id/imgSave"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/save"
+                android:tint="@android:color/white"
+                android:contentDescription="Save"/>
+
+            <ImageView
+                android:id="@+id/profile_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_weight="1"
+                android:src="@drawable/profile"
+                android:tint="@android:color/white"
+                android:contentDescription="Profile"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <!-- Floating Action Button (FAB) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="85dp"
+        android:backgroundTint="@color/orange"
+        android:contentDescription="Tambah Makanan"
+        android:src="@drawable/ic_add"
+        android:tint="@android:color/white" />
+
+</FrameLayout>

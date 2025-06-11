@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
@@ -32,19 +34,24 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         FoodModel food = foodList.get(position);
-        holder.imageViewRestaurant.setImageResource(food.getImageResource());
+
+        Glide.with(context)
+                .load(food.getImageUri()) // Gunakan imageUri dari Firebase
+                .placeholder(R.drawable.restoran)
+                .into(holder.imageViewRestaurant);
+
         holder.textRestaurantName.setText(food.getTitle());
         holder.foodDesc.setText(food.getDescription());
 
-        // Navigasi ke RestoranActivity saat item diklik
-        View.OnClickListener listener = v -> {
-            Intent intent = new Intent(context, RestoranActivity.class);
-            intent.putExtra("foodName", food.getTitle());
+        // Hanya gambar yang bisa diklik untuk menuju ke RestaurantActivity
+        holder.imageViewRestaurant.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ReviewActivity.class);
+            intent.putExtra("title", food.getTitle());
+            intent.putExtra("description", food.getDescription());
+            intent.putExtra("imageUri", food.getImageUri());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // agar tidak crash jika context bukan activity
             context.startActivity(intent);
-        };
-
-//        holder.itemView.setOnClickListener(listener);  // Klik seluruh item
-        holder.imageViewRestaurant.setOnClickListener(listener); // Klik gambar saja
+        });
     }
 
     @Override
