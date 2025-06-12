@@ -22,7 +22,7 @@ Home Page     : Ghairan dan Agung
 
 Edit Profile  : Farrel
 
-Bookmark      : Fauzan
+Favorite    : Fauzan
 
 
 

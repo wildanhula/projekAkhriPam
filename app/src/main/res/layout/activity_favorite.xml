@@ -44,10 +44,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/setting" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- RecyclerView Vertical (Only one now) -->
+    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewBottom"
         android:layout_width="0dp"
@@ -56,6 +55,18 @@
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Floating Action Button (+) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddRestaurant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="Add Restaurant"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/orange"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Bottom Navigation -->
@@ -71,7 +82,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Navigation Item Template -->
+        <!-- Item 1 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -93,6 +104,7 @@
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
+        <!-- Item 2 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -113,6 +125,7 @@
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
+        <!-- Item 3 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -133,6 +146,7 @@
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
+        <!-- Item 4 (Active - Save) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -153,6 +167,7 @@
                 android:textColor="#FFA500" />
         </LinearLayout>
 
+        <!-- Item 5 -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -84,14 +84,15 @@
                     android:orientation="horizontal"/>
 
                 <!-- Mostly Visited -->
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mostly Visited"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
                     android:padding="10dp"
-                    android:textColor="@android:color/black"/>
+                    android:text="Mostly Visited"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerMostlyVisited"

@@ -4,12 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -34,14 +35,24 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Restaurant restaurant = restaurantList.get(position);
 
-        holder.imageView.setImageResource(restaurant.getImageResId());
         holder.nameTextView.setText(restaurant.getName());
         holder.descriptionTextView.setText(restaurant.getDescription());
-        // Jika ada ratingBar, tambahkan di XML dan di sini juga
+        holder.locationTextView.setText(restaurant.getLocation()); // Disembunyikan
+        holder.priceTextView.setText(restaurant.getPrice());       // Disembunyikan
 
-        // Tombol bisa ditambahkan fungsionalitas di sini kalau diperlukan
+        // Load image dari URL menggunakan Glide
+        if (restaurant.getImageUrl() != null && !restaurant.getImageUrl().isEmpty()) {
+            Glide.with(context)
+                    .load(restaurant.getImageUrl())
+                    .placeholder(R.drawable.restoran) // gambar default sementara loading
+                    .into(holder.imageView);
+        } else {
+            holder.imageView.setImageResource(R.drawable.restoran); // default jika tidak ada gambar
+        }
+
+        // Contoh: Tambahkan onClick untuk like button
         holder.likeIcon.setOnClickListener(v -> {
-            // contoh: Toast.makeText(context, "Liked " + restaurant.getName(), Toast.LENGTH_SHORT).show();
+            // Implementasikan fungsi like
         });
     }
 
@@ -54,19 +65,21 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         ImageView imageView;
         TextView nameTextView;
         TextView descriptionTextView;
-        ImageView likeIcon, dislikeIcon, shareIcon;
-        ImageButton bookmarkButton;
+        TextView locationTextView;
+        TextView priceTextView;
+        ImageView likeIcon, dislikeIcon, shareIcon, bookmarkIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             imageView = itemView.findViewById(R.id.imageViewRestaurant);
             nameTextView = itemView.findViewById(R.id.textRestaurantName);
             descriptionTextView = itemView.findViewById(R.id.foodDesc);
+            locationTextView = itemView.findViewById(R.id.textLocation);
+            priceTextView = itemView.findViewById(R.id.textPrice);
             likeIcon = itemView.findViewById(R.id.likeIcon);
             dislikeIcon = itemView.findViewById(R.id.dislikeIcon);
             shareIcon = itemView.findViewById(R.id.shareIcon);
-            bookmarkButton = itemView.findViewById(R.id.btnBookmark);
+            bookmarkIcon = itemView.findViewById(R.id.bookmarkIcon);
         }
     }
 }

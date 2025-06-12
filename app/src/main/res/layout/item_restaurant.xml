@@ -9,7 +9,6 @@
     android:padding="10dp">
 
     <!-- Gambar Restoran -->
-
     <ImageView
         android:id="@+id/imageViewRestaurant"
         android:layout_width="150dp"
@@ -18,13 +17,12 @@
         android:scaleType="centerCrop"
         android:contentDescription="@string/restaurant_image_desc"/>
 
-
     <!-- Nama Restoran -->
     <TextView
         android:id="@+id/textRestaurantName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Spill Pasta"
+        android:text="Nama Restoran"
         android:textStyle="bold"
         android:gravity="center"
         android:paddingTop="5dp"/>
@@ -34,12 +32,26 @@
         android:id="@+id/foodDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Restoran Pasta Bintang Lima"
+        android:text="Deskripsi Restoran"
         android:textSize="10sp"
         android:gravity="center"
         android:paddingBottom="5dp"/>
 
-    <!-- Ikon Share, Like, Dislike -->
+    <!-- Lokasi (disembunyikan) -->
+    <TextView
+        android:id="@+id/textLocation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <!-- Harga (disembunyikan) -->
+    <TextView
+        android:id="@+id/textPrice"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <!-- Ikon Share, Like, Dislike, Bookmark -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,7 +91,4 @@
             android:layout_margin="5dp"
             android:contentDescription="@string/save_icon" />
     </LinearLayout>
-
-
-
 </LinearLayout>

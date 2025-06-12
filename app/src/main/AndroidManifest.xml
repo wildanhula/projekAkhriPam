@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Untuk akses galeri pada SDK < 33 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- Untuk akses gambar (SDK 33+) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Untuk akses kamera -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -17,10 +23,7 @@
         android:theme="@style/Theme.Projectakhir"
         tools:targetApi="35">
 
-        <activity
-            android:name=".ReviewActivity"
-            android:exported="true" />
-
+        <!-- Activity login sebagai launcher -->
         <activity
             android:name=".login_activity"
             android:exported="true">
@@ -30,15 +33,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".EditReviewActivity" android:exported="false" />
+        <!-- Daftar aktivitas lainnya -->
         <activity android:name=".MainActivity" android:exported="true" />
+        <activity android:name=".ReviewActivity" android:exported="true" />
         <activity android:name=".RestoranActivity" android:exported="false" />
         <activity android:name=".FavoriteActivity" android:exported="false" />
         <activity android:name=".ProfilActivity" android:exported="false" />
         <activity android:name=".AddReviewActivity" android:exported="false" />
+        <activity android:name=".EditReviewActivity" android:exported="false" />
         <activity android:name=".edit_profile" android:exported="false" />
         <activity android:name=".InsertFoodActivity" android:exported="false" />
+        <activity android:name=".InsertRestaurantActivity" android:exported="false" />
 
+        <!-- Preloaded fonts -->
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
