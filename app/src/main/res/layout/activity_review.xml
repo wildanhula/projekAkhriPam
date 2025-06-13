@@ -25,7 +25,6 @@
                 android:layout_height="72dp"
                 android:background="@color/orange"
                 android:orientation="horizontal"
-
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -158,36 +157,73 @@
 
                 <!-- Ikon aksi -->
                 <LinearLayout
-                    android:id="@+id/layoutActionIcons"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <ImageButton
-                        android:id="@+id/bt_like"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:padding="5dp"
-                        app:srcCompat="@drawable/ic_like" />
+                    <!-- Tombol Like -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvLikeCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="0"
+                            android:textColor="@android:color/darker_gray"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <!-- Spacer -->
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
 
                     <ImageButton
-                        android:id="@+id/bt_bookmark"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent"
-                        android:padding="5dp"
-                        app:srcCompat="@drawable/ic_book" />
+                        android:id="@+id/btnBookmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_bookmark_selector"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Bookmark"
+                        android:padding="4dp"
+                        android:focusable="true"
+                        android:clickable="true"/>
+
 
                     <ImageButton
-                        android:id="@+id/bt_share"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:srcCompat="@drawable/ic_share"
-                        android:background="@android:color/transparent"
-                        android:padding="5dp" />
+                        android:id="@+id/btnShare"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/share"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_share"
+                        android:tint="@color/black" />
+
+
+                    <ImageButton
+                        android:id="@+id/btnLike"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_like_selector"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Like"
+                        android:padding="4dp"
+                        android:focusable="true"
+                        android:clickable="true"/>
+
+
+
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -226,14 +262,27 @@
                 <EditText
                     android:id="@+id/etReview"
                     android:layout_width="360dp"
-                    android:layout_height="50dp"
+                    android:layout_height="100dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_input"
                     android:hint="Review"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     android:paddingLeft="30dp"
+                    android:paddingTop="15dp"
+                    android:gravity="top"
                     android:textColorHint="@color/black" />
+
+                <!-- Image Preview -->
+                <ImageView
+                    android:id="@+id/ivPreview"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/bg_input"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/layoutReviewButtons"
@@ -247,6 +296,7 @@
                         android:id="@+id/btnAddImage"
                         android:layout_width="140dp"
                         android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
                         android:background="@drawable/bg_input"
                         android:text="Add image"
                         android:textAllCaps="true"
@@ -313,8 +363,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Home"
-                android:src="@drawable/home"
-                 />
+                android:src="@drawable/home" />
 
             <TextView
                 android:id="@+id/tv_home"
@@ -339,8 +388,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:contentDescription="Notifications"
-                android:src="@drawable/notification"
-                 />
+                android:src="@drawable/notification" />
         </LinearLayout>
 
         <!-- SAVE -->
@@ -374,8 +422,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:contentDescription="Profile"
-                android:src="@drawable/profile"
-             />
+                android:src="@drawable/profile" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

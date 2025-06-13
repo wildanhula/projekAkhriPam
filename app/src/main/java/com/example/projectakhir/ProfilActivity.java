@@ -183,6 +183,21 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         Toast.makeText(this, "Review updated at position " + position, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onLikeClick(Review review, int position) {
+
+    }
+
+    @Override
+    public void onShareClick(Review review, int position) {
+
+    }
+
+    @Override
+    public void onBookmarkClick(Review review, int position) {
+
+    }
+
     private void showEditDialog(Review review, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Review");
@@ -245,38 +260,38 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         }
     }
 
-    private void setupBottomNavigation() {
-        ImageView homeIcon = findViewById(R.id.home_icon);
-        ImageView notificationIcon = findViewById(R.id.notification_icon);
-        ImageView journalIcon = findViewById(R.id.journal_icon);
-        ImageView saveIcon = findViewById(R.id.imgSave);
-        ImageView profileIcon = findViewById(R.id.profile_icon);
+        private void setupBottomNavigation() {
+            ImageView homeIcon = findViewById(R.id.home_icon);
+            ImageView notificationIcon = findViewById(R.id.notification_icon);
+            ImageView journalIcon = findViewById(R.id.journal_icon);
+            ImageView saveIcon = findViewById(R.id.imgSave);
+            ImageView profileIcon = findViewById(R.id.profile_icon);
 
-        profileIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_dark));
+            profileIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_dark));
 
-        homeIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        });
+            homeIcon.setOnClickListener(v -> {
+                Intent intent = new Intent(ProfilActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
+            });
 
-        notificationIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show();
-        });
+            notificationIcon.setOnClickListener(v -> {
+                Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show();
+            });
 
-        journalIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Journal clicked", Toast.LENGTH_SHORT).show();
-        });
+            journalIcon.setOnClickListener(v -> {
+                Toast.makeText(this, "Journal clicked", Toast.LENGTH_SHORT).show();
+            });
 
-        saveIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, FavoriteActivity.class);
-            startActivity(intent);
-            finish();
-        });
+            saveIcon.setOnClickListener(v -> {
+                Intent intent = new Intent(ProfilActivity.this, FavoriteActivity.class);
+                startActivity(intent);
+                finish();
+            });
 
-        profileIcon.setOnClickListener(v -> {
-            // Sudah di halaman profil
-        });
+            profileIcon.setOnClickListener(v -> {
+                // Sudah di halaman profil
+            });
+        }
     }
-}

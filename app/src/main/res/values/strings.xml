@@ -18,4 +18,8 @@
     <string name="save_icon">Save icon</string>
     <string name="description">description</string>
     <string name="submit">submit</string>
+    <string name="share">Share</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="like">Like</string>
+
 </resources>
