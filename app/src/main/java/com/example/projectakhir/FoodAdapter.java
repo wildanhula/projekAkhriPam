@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,20 +37,34 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         FoodModel food = foodList.get(position);
 
         Glide.with(context)
-                .load(food.getImageUri()) // Gunakan imageUri dari Firebase
+                .load(food.getImageUri())
                 .placeholder(R.drawable.restoran)
                 .into(holder.imageViewRestaurant);
 
         holder.textRestaurantName.setText(food.getTitle());
         holder.foodDesc.setText(food.getDescription());
 
-        // Hanya gambar yang bisa diklik untuk menuju ke RestaurantActivity
+        // Klik gambar → buka ReviewActivity
         holder.imageViewRestaurant.setOnClickListener(v -> {
             Intent intent = new Intent(context, ReviewActivity.class);
             intent.putExtra("title", food.getTitle());
             intent.putExtra("description", food.getDescription());
             intent.putExtra("imageUri", food.getImageUri());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // agar tidak crash jika context bukan activity
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        });
+
+        // Klik tombol edit → buka EditFoodActivity
+        holder.editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EditFoodActivity.class);
+            intent.putExtra("food_id", food.getId()); // Pastikan FoodModel punya ID unik
+            intent.putExtra("title", food.getTitle());
+            intent.putExtra("description", food.getDescription());
+            intent.putExtra("imageUri", food.getImageUri());
+            intent.putExtra("location", food.getLocation());
+            intent.putExtra("price", food.getPrice());
+            intent.putExtra("openingHours", food.getOpeningHours());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
     }
@@ -62,12 +77,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewRestaurant;
         TextView textRestaurantName, foodDesc;
+        ImageButton editButton;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewRestaurant = itemView.findViewById(R.id.imageViewRestaurant);
             textRestaurantName = itemView.findViewById(R.id.textRestaurantName);
             foodDesc = itemView.findViewById(R.id.foodDesc);
+            editButton = itemView.findViewById(R.id.editButton); // tombol edit kecil di samping deskripsi
         }
     }
 }

@@ -21,5 +21,6 @@
     <string name="share">Share</string>
     <string name="bookmark">Bookmark</string>
     <string name="like">Like</string>
+    <string name="edit_button_desc">Edit deskripsi</string>
 
 </resources>

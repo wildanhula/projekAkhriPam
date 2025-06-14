@@ -1,6 +1,7 @@
 package com.example.projectakhir;
 
 public class FoodModel {
+    private String id;            // <-- Field baru untuk id
     private String imageUri;
     private String title;
     private String description;
@@ -10,8 +11,10 @@ public class FoodModel {
 
     public FoodModel() {} // Wajib untuk Firebase
 
-    public FoodModel(String imageUri, String title, String description,
+    // Constructor dengan id
+    public FoodModel(String id, String imageUri, String title, String description,
                      String location, String price, String openingHours) {
+        this.id = id;
         this.imageUri = imageUri;
         this.title = title;
         this.description = description;
@@ -21,6 +24,7 @@ public class FoodModel {
     }
 
     // Getter
+    public String getId() { return id; }
     public String getImageUri() { return imageUri; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
@@ -29,6 +33,7 @@ public class FoodModel {
     public String getOpeningHours() { return openingHours; }
 
     // Setter
+    public void setId(String id) { this.id = id; }
     public void setImageUri(String imageUri) { this.imageUri = imageUri; }
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }

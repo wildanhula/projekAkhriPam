@@ -27,15 +27,31 @@
         android:gravity="center"
         android:paddingTop="5dp"/>
 
-    <!-- Deskripsi Restoran -->
-    <TextView
-        android:id="@+id/foodDesc"
+    <!-- Deskripsi Restoran + Edit Button -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Deskripsi Restoran"
-        android:textSize="10sp"
-        android:gravity="center"
-        android:paddingBottom="5dp"/>
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/foodDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deskripsi Restoran"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:paddingBottom="5dp"/>
+
+        <ImageButton
+            android:id="@+id/editButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/edit_button_desc"
+            android:src="@drawable/ic_edit" />
+    </LinearLayout>
 
     <!-- Lokasi (disembunyikan) -->
     <TextView

@@ -59,13 +59,14 @@ public class InsertFoodActivity extends AppCompatActivity {
     }
 
     private void saveFood() {
-        String name = editName.getText().toString().trim();
-        String desc = editDesc.getText().toString().trim();
+        String title = editName.getText().toString().trim();
+        String description = editDesc.getText().toString().trim();
         String location = editLocation.getText().toString().trim();
         String price = editPrice.getText().toString().trim();
         String openingHours = editOpeningHours.getText().toString().trim();
 
-        if (name.isEmpty() || desc.isEmpty() || imageUri == null || location.isEmpty() || price.isEmpty() || openingHours.isEmpty()) {
+        if (title.isEmpty() || description.isEmpty() || imageUri == null ||
+                location.isEmpty() || price.isEmpty() || openingHours.isEmpty()) {
             Toast.makeText(this, "Semua field harus diisi dan gambar dipilih!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -75,7 +76,7 @@ public class InsertFoodActivity extends AppCompatActivity {
         ).getReference("foods");
 
         String id = foodsRef.push().getKey();
-        FoodModel food = new FoodModel(imageUri.toString(), name, desc, location, price, openingHours);
+        FoodModel food = new FoodModel(id, imageUri.toString(), title, description, location, price, openingHours);
 
         foodsRef.child(id).setValue(food)
                 .addOnSuccessListener(aVoid -> {

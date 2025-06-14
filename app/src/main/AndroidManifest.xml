@@ -43,6 +43,7 @@
         <activity android:name=".EditReviewActivity" android:exported="false" />
         <activity android:name=".edit_profile" android:exported="false" />
         <activity android:name=".InsertFoodActivity" android:exported="false" />
+        <activity android:name=".EditFoodActivity" android:exported="false" />
         <activity android:name=".InsertRestaurantActivity" android:exported="false" />
 
         <!-- Preloaded fonts -->
