@@ -281,7 +281,10 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
             });
 
             journalIcon.setOnClickListener(v -> {
-                Toast.makeText(this, "Journal clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ProfilActivity.this, JournalActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish();
             });
 
             saveIcon.setOnClickListener(v -> {

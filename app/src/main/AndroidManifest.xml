@@ -46,6 +46,11 @@
         <activity android:name=".EditFoodActivity" android:exported="false" />
         <activity android:name=".InsertRestaurantActivity" android:exported="false" />
         <activity android:name=".EditRestaurantActivity" android:exported="false" />
+        <activity android:name=".JournalActivity" android:exported="false" />
+        <activity android:name=".InsertJournalActivity" android:exported="false" />
+
+
+
         <!-- Preloaded fonts -->
         <meta-data
             android:name="preloaded_fonts"
