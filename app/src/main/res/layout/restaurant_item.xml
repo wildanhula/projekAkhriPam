@@ -20,24 +20,44 @@
             android:scaleType="centerCrop"
             android:src="@drawable/restoran" />
 
+        <!-- Nama Restoran -->
         <TextView
             android:id="@+id/textRestaurantName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Restaurant Name"
+            android:text="Nama Restoran"
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginTop="8dp" />
 
-        <TextView
-            android:id="@+id/foodDesc"
+        <!-- Deskripsi + Edit Button -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Description here"
-            android:textSize="14sp"
-            android:textColor="#777777"
-            android:layout_marginBottom="4dp"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/foodDesc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Deskripsi Restoran"
+                android:textSize="14sp"
+                android:textColor="#777777" />
+
+            <ImageButton
+                android:id="@+id/editButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Edit"
+                android:src="@drawable/ic_edit" />
+        </LinearLayout>
+
+        <!-- Tombol Ikon -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,6 +66,14 @@
             android:layout_marginTop="6dp"
             android:layout_marginBottom="4dp"
             android:weightSum="4">
+
+            <ImageView
+                android:id="@+id/shareIcon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/share"
+                android:contentDescription="Share" />
 
             <ImageView
                 android:id="@+id/likeIcon"
@@ -62,14 +90,6 @@
                 android:layout_weight="1"
                 android:src="@drawable/dislike"
                 android:contentDescription="Dislike" />
-
-            <ImageView
-                android:id="@+id/shareIcon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/share"
-                android:contentDescription="Share" />
 
             <ImageButton
                 android:id="@+id/btnBookmark"
