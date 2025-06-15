@@ -1,9 +1,11 @@
 package com.example.projectakhir;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,9 +19,18 @@ import java.util.List;
 public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.ViewHolder> {
 
     private Context context;
-    private List<Restaurant> restaurantList;
+    private List<RestaurantModel> restaurantList;
+    private OnItemClickListener listener;
 
-    public RestaurantAdapter(Context context, List<Restaurant> restaurantList) {
+    public interface OnItemClickListener {
+        void onItemClick(RestaurantModel restaurant);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public RestaurantAdapter(Context context, List<RestaurantModel> restaurantList) {
         this.context = context;
         this.restaurantList = restaurantList;
     }
@@ -33,26 +44,58 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Restaurant restaurant = restaurantList.get(position);
+        RestaurantModel restaurant = restaurantList.get(position);
 
         holder.nameTextView.setText(restaurant.getName());
         holder.descriptionTextView.setText(restaurant.getDescription());
-        holder.locationTextView.setText(restaurant.getLocation()); // Disembunyikan
-        holder.priceTextView.setText(restaurant.getPrice());       // Disembunyikan
+        holder.locationTextView.setText(restaurant.getLocation());
+        holder.priceTextView.setText(restaurant.getPrice());
 
-        // Load image dari URL menggunakan Glide
+        // Load image
         if (restaurant.getImageUrl() != null && !restaurant.getImageUrl().isEmpty()) {
             Glide.with(context)
                     .load(restaurant.getImageUrl())
-                    .placeholder(R.drawable.restoran) // gambar default sementara loading
+                    .placeholder(R.drawable.restoran)
                     .into(holder.imageView);
         } else {
-            holder.imageView.setImageResource(R.drawable.restoran); // default jika tidak ada gambar
+            holder.imageView.setImageResource(R.drawable.restoran);
         }
 
-        // Contoh: Tambahkan onClick untuk like button
+        // Klik seluruh item
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(restaurant);
+            }
+        });
+
+        // Klik tombol edit
+        holder.editButton.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EditRestaurantActivity.class);
+            intent.putExtra("restaurantId", restaurant.getId());
+            intent.putExtra("restaurantName", restaurant.getName());
+            intent.putExtra("restaurantDesc", restaurant.getDescription());
+            intent.putExtra("restaurantLocation", restaurant.getLocation());
+            intent.putExtra("restaurantPrice", restaurant.getPrice());
+            intent.putExtra("restaurantHours", restaurant.getOpeningHours());
+            intent.putExtra("restaurantImageUrl", restaurant.getImageUrl());
+            context.startActivity(intent);
+        });
+
+        // Placeholder aksi ikon
         holder.likeIcon.setOnClickListener(v -> {
-            // Implementasikan fungsi like
+            // Tambahkan aksi like
+        });
+
+        holder.dislikeIcon.setOnClickListener(v -> {
+            // Tambahkan aksi dislike
+        });
+
+        holder.shareIcon.setOnClickListener(v -> {
+            // Tambahkan aksi share
+        });
+
+        holder.bookmarkIcon.setOnClickListener(v -> {
+            // Tambahkan aksi bookmark
         });
     }
 
@@ -68,6 +111,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         TextView locationTextView;
         TextView priceTextView;
         ImageView likeIcon, dislikeIcon, shareIcon, bookmarkIcon;
+        ImageButton editButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,6 +124,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
             dislikeIcon = itemView.findViewById(R.id.dislikeIcon);
             shareIcon = itemView.findViewById(R.id.shareIcon);
             bookmarkIcon = itemView.findViewById(R.id.bookmarkIcon);
+            editButton = itemView.findViewById(R.id.editButton);
         }
     }
 }

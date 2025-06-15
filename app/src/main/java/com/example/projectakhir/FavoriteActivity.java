@@ -22,7 +22,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewBottom;
     private RestaurantAdapter adapterBottom;
-    private List<Restaurant> restaurantList;
+    private List<RestaurantModel> restaurantList;
     private DatabaseReference databaseReference;
     private FloatingActionButton fabAddRestaurant;
     private ImageView imgHome;
@@ -43,17 +43,18 @@ public class FavoriteActivity extends AppCompatActivity {
         recyclerViewBottom.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerViewBottom.setAdapter(adapterBottom);
 
-        // Ambil data dari Firebase
+        // Firebase reference
         databaseReference = FirebaseDatabase.getInstance(
                 "https://projectakhir-d24d3-default-rtdb.asia-southeast1.firebasedatabase.app/"
         ).getReference("restaurants");
 
+        // Ambil data dari Firebase
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 restaurantList.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
-                    Restaurant restaurant = data.getValue(Restaurant.class);
+                    RestaurantModel restaurant = data.getValue(RestaurantModel.class);
                     if (restaurant != null) {
                         restaurantList.add(restaurant);
                     }
@@ -63,21 +64,27 @@ public class FavoriteActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Error dari Firebase
-                // Bisa tambahkan log atau Toast jika ingin
+                // Bisa ditambahkan Toast atau log
             }
         });
 
-        // Navigasi ke MainActivity saat tombol Home ditekan
+        // Navigasi ke MainActivity saat klik icon home
         imgHome.setOnClickListener(v -> {
             Intent intent = new Intent(FavoriteActivity.this, MainActivity.class);
             startActivity(intent);
-            finish(); // opsional, supaya tidak bisa kembali ke FavoriteActivity dengan tombol back
+            finish();
         });
 
         // Navigasi ke InsertRestaurantActivity saat FAB ditekan
         fabAddRestaurant.setOnClickListener(v -> {
             Intent intent = new Intent(FavoriteActivity.this, InsertRestaurantActivity.class);
+            startActivity(intent);
+        });
+
+        // Klik item untuk edit restaurant
+        adapterBottom.setOnItemClickListener(restaurant -> {
+            Intent intent = new Intent(FavoriteActivity.this, InsertRestaurantActivity.class);
+            intent.putExtra("restaurant", restaurant); // Kirim data restoran ke form edit
             startActivity(intent);
         });
     }
