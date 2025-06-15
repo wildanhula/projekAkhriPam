@@ -50,9 +50,15 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
             intent.putExtra("title", food.getTitle());
             intent.putExtra("description", food.getDescription());
             intent.putExtra("imageUri", food.getImageUri());
+            // 🔽 Tambahkan ini:
+            intent.putExtra("location", food.getLocation());
+            intent.putExtra("price", food.getPrice());
+            intent.putExtra("openingHours", food.getOpeningHours());
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
+
 
         // Klik tombol edit → buka EditFoodActivity
         holder.editButton.setOnClickListener(v -> {

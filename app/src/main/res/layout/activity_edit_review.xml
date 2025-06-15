@@ -10,23 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="12dp"
+        android:background="@drawable/bg_card"
+        android:elevation="4dp"
+        android:clipToPadding="false"
+        android:layout_margin="8dp">
 
-        <!-- Input Judul Review -->
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_judul"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Judul Review" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Input Isi Review -->
+        <!-- Kolom Isi Review -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
@@ -37,32 +27,20 @@
                 android:id="@+id/et_isi"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:hint="Isi Review"
+                android:hint="Tulis review kamu di sini..."
                 android:gravity="top"
                 android:inputType="textMultiLine" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Input Nama Menu -->
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_menu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Nama Menu" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Tombol Pilih Gambar -->
+        <!-- Tombol Ambil Gambar dari Kamera -->
         <Button
-            android:id="@+id/btn_select_image"
+            android:id="@+id/btn_capture_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Pilih Gambar dari Galeri"
-            android:layout_marginBottom="8dp" />
+            android:text="Ambil Gambar dari Kamera"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/teal_700"
+            android:textColor="@android:color/white" />
 
         <!-- Preview Gambar -->
         <ImageView
@@ -72,7 +50,7 @@
             android:layout_marginBottom="16dp"
             android:scaleType="centerCrop"
             android:contentDescription="Preview Gambar"
-            android:background="@android:color/darker_gray" />
+            android:background="@drawable/bg_image_preview" />
 
         <!-- Tombol Aksi -->
         <LinearLayout

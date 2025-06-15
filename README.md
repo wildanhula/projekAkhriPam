@@ -16,7 +16,7 @@ Email : farrel@gmail.com
 
 Password : inipasswordnya
 
-Login Page    : Wildan
+Login Page + review : Wildan
 
 Home Page     : Ghairan dan Agung
 

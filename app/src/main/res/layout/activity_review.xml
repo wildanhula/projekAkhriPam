@@ -5,20 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    tools:context=".ReviewActivity">
 
     <!-- Scrollable Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_bar"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <LinearLayout
                 android:id="@+id/linearLayoutHeader"
                 android:layout_width="match_parent"
@@ -257,7 +257,9 @@
                     android:hint="Nama Menu"
                     android:inputType="text"
                     android:paddingLeft="30dp"
+                    android:visibility="gone"
                     android:textColorHint="@color/black" />
+
 
                 <EditText
                     android:id="@+id/etReview"
@@ -335,94 +337,62 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <!-- Bottom Navigation Bar (Fixed at bottom) -->
     <LinearLayout
         android:id="@+id/bottom_nav_bar"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
         android:background="@color/orange"
-        android:gravity="center"
         android:orientation="horizontal"
+        android:gravity="center"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- HOME -->
-        <LinearLayout
-            android:id="@+id/nav_home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/home_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:src="@drawable/home"
+            android:tint="@android:color/holo_orange_dark"
+            android:contentDescription="Home"/>
 
-            <ImageView
-                android:id="@+id/icon_home"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:contentDescription="Home"
-                android:src="@drawable/home" />
-
-            <TextView
-                android:id="@+id/tv_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textColor="#FFA500"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <!-- NOTIFICATION -->
-        <LinearLayout
-            android:id="@+id/nav_notification"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/notification_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:src="@drawable/notification"
+            android:tint="@android:color/white"
+            android:contentDescription="Notifications"/>
 
-            <ImageView
-                android:id="@+id/icon_notification"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:contentDescription="Notifications"
-                android:src="@drawable/notification" />
-        </LinearLayout>
-
-        <!-- SAVE -->
-        <LinearLayout
-            android:id="@+id/nav_save"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/journal_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:src="@drawable/journal"
+            android:tint="@android:color/white"
+            android:contentDescription="Journal"/>
 
-            <ImageView
-                android:id="@+id/icon_save"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:contentDescription="Save"
-                android:src="@drawable/save" />
-        </LinearLayout>
-
-        <!-- PROFILE -->
-        <LinearLayout
-            android:id="@+id/nav_profile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/imgSave"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:src="@drawable/save"
+            android:tint="@android:color/white"
+            android:contentDescription="Save"/>
 
-            <ImageView
-                android:id="@+id/icon_profile"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:contentDescription="Profile"
-                android:src="@drawable/profile" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/profile_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_weight="1"
+            android:src="@drawable/profile"
+            android:tint="@android:color/white"
+            android:contentDescription="Profile"/>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

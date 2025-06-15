@@ -1,27 +1,28 @@
+// Review.java (versi final dengan Parcelable dan fitur Like/Bookmark/Share)
 package com.example.projectakhir;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Review implements Serializable {
+public class Review implements Parcelable {
     private String id;
     private String date;
     private String title;
     private String review;
     private String menu;
-    private String imagePath; // Local image path
-    private int imageRes; // Default image fallback
+    private String imagePath;
+    private int imageRes;
 
-
-    // FIELD BARU - Untuk fitur Like, Share, Bookmark
-    private boolean isLiked = false;
-    private int likeCount = 0;
-    private boolean isBookmarked = false;
+    private boolean isLiked;
+    private int likeCount;
+    private boolean isBookmarked;
 
     public Review() {
-        // Diperlukan untuk Firebase
         this.isLiked = false;
         this.likeCount = 0;
         this.isBookmarked = false;
@@ -35,7 +36,6 @@ public class Review implements Serializable {
         this.menu = menu;
         this.imagePath = imagePath;
         this.imageRes = imageRes;
-        // INISIALISASI BARU - Set default value untuk field baru
         this.isLiked = false;
         this.likeCount = 0;
         this.isBookmarked = false;
@@ -45,7 +45,31 @@ public class Review implements Serializable {
         this(id, date, title, review, menu, null, imageRes);
     }
 
-    // Getter yang sudah ada
+    protected Review(Parcel in) {
+        id = in.readString();
+        date = in.readString();
+        title = in.readString();
+        review = in.readString();
+        menu = in.readString();
+        imagePath = in.readString();
+        imageRes = in.readInt();
+        isLiked = in.readByte() != 0;
+        likeCount = in.readInt();
+        isBookmarked = in.readByte() != 0;
+    }
+
+    public static final Creator<Review> CREATOR = new Creator<Review>() {
+        @Override
+        public Review createFromParcel(Parcel in) {
+            return new Review(in);
+        }
+
+        @Override
+        public Review[] newArray(int size) {
+            return new Review[size];
+        }
+    };
+
     public String getId() { return id; }
     public String getDate() { return date; }
     public String getTitle() { return title; }
@@ -53,8 +77,10 @@ public class Review implements Serializable {
     public String getMenu() { return menu; }
     public String getImagePath() { return imagePath; }
     public int getImageRes() { return imageRes; }
+    public boolean isLiked() { return isLiked; }
+    public int getLikeCount() { return likeCount; }
+    public boolean isBookmarked() { return isBookmarked; }
 
-    // Setter yang sudah ada
     public void setId(String id) { this.id = id; }
     public void setDate(String date) { this.date = date; }
     public void setTitle(String title) { this.title = title; }
@@ -62,41 +88,14 @@ public class Review implements Serializable {
     public void setMenu(String menu) { this.menu = menu; }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
     public void setImageRes(int imageRes) { this.imageRes = imageRes; }
+    public void setLiked(boolean liked) { this.isLiked = liked; }
+    public void setLikeCount(int likeCount) { this.likeCount = Math.max(0, likeCount); }
+    public void setBookmarked(boolean bookmarked) { this.isBookmarked = bookmarked; }
 
-    // GETTER BARU - Untuk fitur Like, Share, Bookmark
-    public boolean isLiked() {
-        return isLiked;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public boolean isBookmarked() {
-        return isBookmarked;
-    }
-
-    // SETTER BARU - Untuk fitur Like, Share, Bookmark
-    public void setLiked(boolean liked) {
-        this.isLiked = liked;
-    }
-
-    public void setLikeCount(int likeCount) {
-        this.likeCount = Math.max(0, likeCount); // Pastikan tidak negatif
-    }
-
-    public void setBookmarked(boolean bookmarked) {
-        this.isBookmarked = bookmarked;
-    }
-
-    // METHOD BARU - Helper methods untuk fitur baru
     public void toggleLike() {
         this.isLiked = !this.isLiked;
-        if (this.isLiked) {
-            this.likeCount++;
-        } else {
-            this.likeCount = Math.max(0, this.likeCount - 1);
-        }
+        if (this.isLiked) this.likeCount++;
+        else this.likeCount = Math.max(0, this.likeCount - 1);
     }
 
     public void toggleBookmark() {
@@ -111,7 +110,6 @@ public class Review implements Serializable {
         this.likeCount = Math.max(0, this.likeCount - 1);
     }
 
-    // Method yang sudah ada
     public void updateDate() {
         this.date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date());
     }
@@ -120,7 +118,6 @@ public class Review implements Serializable {
         return imagePath != null && !imagePath.trim().isEmpty();
     }
 
-    // METHOD BARU - Untuk keperluan sharing
     public String getShareText() {
         return "Review Makanan:\n\n" +
                 "Menu: " + this.menu + "\n" +
@@ -129,7 +126,6 @@ public class Review implements Serializable {
                 "Dibagikan dari Aplikasi Review Makanan";
     }
 
-    // METHOD BARU - Override equals dan hashCode untuk comparison yang lebih baik
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -143,7 +139,6 @@ public class Review implements Serializable {
         return id != null ? id.hashCode() : 0;
     }
 
-    // METHOD BARU - ToString untuk debugging
     @Override
     public String toString() {
         return "Review{" +
@@ -154,5 +149,24 @@ public class Review implements Serializable {
                 ", likeCount=" + likeCount +
                 ", isBookmarked=" + isBookmarked +
                 '}';
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(date);
+        dest.writeString(title);
+        dest.writeString(review);
+        dest.writeString(menu);
+        dest.writeString(imagePath);
+        dest.writeInt(imageRes);
+        dest.writeByte((byte) (isLiked ? 1 : 0));
+        dest.writeInt(likeCount);
+        dest.writeByte((byte) (isBookmarked ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 }
