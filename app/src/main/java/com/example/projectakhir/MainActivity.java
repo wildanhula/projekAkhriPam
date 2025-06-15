@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
         ImageView profileIcon = findViewById(R.id.profile_icon);
         profileIcon.setOnClickListener(v -> startActivity(new Intent(this, ProfilActivity.class)));
 
+
+        ImageView journalIcon = findViewById(R.id.journal_icon);
+        journalIcon.setOnClickListener(v -> startActivity(new Intent(this, JournalActivity.class)));
+
         // Tombol tambah restoran
         findViewById(R.id.fabAddFood).setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, InsertFoodActivity.class);

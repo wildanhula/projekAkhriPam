@@ -1,6 +1,11 @@
+// JournalAdapter.java
 package com.example.projectakhir;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -34,18 +43,30 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
     public void onBindViewHolder(@NonNull JournalViewHolder holder, int position) {
         JournalModel journal = journalList.get(position);
 
-        holder.imageView.setImageResource(journal.getImage());
         holder.titleView.setText(journal.getTitle());
         holder.descriptionView.setText(journal.getDescription());
 
-        holder.deleteButton.setOnClickListener(v -> {
-            // Logika untuk menghapus item
-            int currentPosition = holder.getAdapterPosition();
-            if (currentPosition != RecyclerView.NO_POSITION) {
-                journalList.remove(currentPosition);
-                notifyItemRemoved(currentPosition);
-                Toast.makeText(context, "Jurnal " + journal.getTitle() + " dihapus", Toast.LENGTH_SHORT).show();
-            }
+        try {
+            byte[] decodedString = Base64.decode(journal.getImage(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            holder.imageView.setImageBitmap(decodedByte);
+        } catch (Exception e) {
+            holder.imageView.setImageResource(R.drawable.ic_add_image);
+            e.printStackTrace();
+        }
+
+
+        holder.deleteButton.setVisibility(View.GONE);
+
+        // BARU: Tambahkan listener pada seluruh item view untuk membuka halaman edit
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, EditJournalActivity.class);
+            // Kirim semua data yang diperlukan ke EditJournalActivity
+            intent.putExtra("JOURNAL_KEY", journal.getKey());
+            intent.putExtra("JOURNAL_TITLE", journal.getTitle());
+            intent.putExtra("JOURNAL_DESCRIPTION", journal.getDescription());
+            intent.putExtra("JOURNAL_IMAGE", journal.getImage());
+            context.startActivity(intent);
         });
     }
 

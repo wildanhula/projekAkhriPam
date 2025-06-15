@@ -48,6 +48,7 @@
         <activity android:name=".EditRestaurantActivity" android:exported="false" />
         <activity android:name=".JournalActivity" android:exported="false" />
         <activity android:name=".InsertJournalActivity" android:exported="false" />
+        <activity android:name=".EditJournalActivity" android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

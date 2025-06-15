@@ -1,17 +1,27 @@
+// JournalActivity.java
 package com.example.projectakhir;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class JournalActivity extends AppCompatActivity {
@@ -20,78 +30,96 @@ public class JournalActivity extends AppCompatActivity {
     private JournalAdapter adapter;
     private List<JournalModel> journalList;
     private FloatingActionButton fabAdd;
+    private DatabaseReference databaseReference;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_journal);
 
-        // Inisialisasi View
-        recyclerView = findViewById(R.id.rv_journal);
-        fabAdd = findViewById(R.id.fab_add_journal);
-
-        // Siapkan data dummy
-        prepareJournalData();
-
-        // Setup RecyclerView
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new JournalAdapter(this, journalList);
-        recyclerView.setAdapter(adapter);
-
-        // Setup Bottom Navigation
-//        setupBottomNavigation();
-
-        // Listener untuk tombol tambah jurnal
-        fabAdd.setOnClickListener(v -> {
-            // Intent ke halaman tambah jurnal baru
-            Intent intent = new Intent(JournalActivity.this, InsertJournalActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    private void setupBottomNavigation() {
-        ImageView homeIcon = findViewById(R.id.home_icon);
-        ImageView notificationIcon = findViewById(R.id.notification_icon);
-        ImageView journalIcon = findViewById(R.id.journal_icon);
+        ImageView homeIcon = findViewById(R.id.imgHome);
+//        ImageView notificationIcon = findViewById(R.id.imgn=);
         ImageView saveIcon = findViewById(R.id.imgSave);
-        ImageView profileIcon = findViewById(R.id.profile_icon);
+        ImageView profileIcon = findViewById(R.id.imgProfil);
+
 
         homeIcon.setOnClickListener(v -> {
             Intent intent = new Intent(JournalActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            finish();
+            finish(); // optional, if you don't want user to go back
         });
 
-        notificationIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show();
-        });
+//        notificationIcon.setOnClickListener(v -> {
+//            Intent intent = new Intent(ReviewActivity.this, NotificationActivity.class);
+//            startActivity(intent);
+//            Toast.makeText(this, "Fitur belum tersedia", Toast.LENGTH_SHORT).show();
+//
+//        });
 
-        journalIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Kamu sudah di halaman jurnal", Toast.LENGTH_SHORT).show();
-        });
+//        journalIcon.setOnClickListener(v -> {
+//            Intent intent = new Intent(ReviewActivity.this, JournalActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            startActivity(intent);
+//            finish();
+//        });
 
         saveIcon.setOnClickListener(v -> {
             Intent intent = new Intent(JournalActivity.this, FavoriteActivity.class);
             startActivity(intent);
             finish();
         });
-
         profileIcon.setOnClickListener(v -> {
             Intent intent = new Intent(JournalActivity.this, ProfilActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            finish();
+        });
+
+        recyclerView = findViewById(R.id.rv_journal);
+        fabAdd = findViewById(R.id.fab_add_journal);
+        // Pastikan Anda menambahkan ProgressBar dengan id 'progressBar' di file XML Anda
+        // progressBar = findViewById(R.id.progressBar);
+
+        // Setup RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        journalList = new ArrayList<>();
+        adapter = new JournalAdapter(this, journalList);
+        recyclerView.setAdapter(adapter);
+
+        // Inisialisasi Firebase Database
+        databaseReference = FirebaseDatabase.getInstance("https://projectakhir-d24d3-default-rtdb.asia-southeast1.firebasedatabase.app/").getReference("Journal");
+
+        // Ambil data dari Firebase
+        fetchJournalData();
+
+        fabAdd.setOnClickListener(v -> {
+            Intent intent = new Intent(JournalActivity.this, InsertJournalActivity.class);
+            startActivity(intent);
         });
     }
 
-    private void prepareJournalData() {
-        journalList = new ArrayList<>();
-        journalList.add(new JournalModel(R.drawable.lalapan, "Gizi pada Lalapan",
-                "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."));
-        journalList.add(new JournalModel(R.drawable.rendang, "Rendang Makanan no 1",
-                "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."));
-        journalList.add(new JournalModel(R.drawable.soto, "Soto Ayam Lamongan",
-                "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."));
+    private void fetchJournalData() {
+        // if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                journalList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    JournalModel journal = snapshot.getValue(JournalModel.class);
+                    if (journal != null) {
+                        journal.setKey(snapshot.getKey()); // Simpan key untuk operasi hapus
+                        journalList.add(journal);
+                    }
+                }
+                Collections.reverse(journalList); // Tampilkan data terbaru di atas
+                adapter.notifyDataSetChanged();
+                // if (progressBar != null) progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // if (progressBar != null) progressBar.setVisibility(View.GONE);
+                Toast.makeText(JournalActivity.this, "Gagal memuat data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

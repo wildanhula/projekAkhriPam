@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InsertJournalActivity">
+    tools:context=".EditJournalActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,10 +16,10 @@
             android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar_insert"
+                android:id="@+id/toolbar_edit"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="Tambah Jurnal Baru"
+                app:title="Edit Jurnal"
                 app:titleTextColor="@android:color/white"
                 app:navigationIcon="@drawable/ic_arrow_back" />
 
@@ -44,7 +44,7 @@
                     android:hint="Judul Journal">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_judul"
+                        android:id="@+id/et_judul_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -57,7 +57,7 @@
                     android:hint="Isi Journal">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/et_isi"
+                        android:id="@+id/et_isi_edit"
                         android:layout_width="match_parent"
                         android:layout_height="150dp"
                         android:gravity="top"
@@ -65,54 +65,46 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/btn_select_image"
+                    android:id="@+id/btn_change_image_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Pilih Gambar dari Galeri" />
+                    android:text="Ganti Gambar" />
 
                 <ImageView
-                    android:id="@+id/image_preview"
+                    android:id="@+id/image_preview_edit"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_marginBottom="16dp"
-                    android:background="#E0E0E0"
-                    android:contentDescription="Preview Gambar"
                     android:scaleType="centerCrop"
-                     />
+                    android:background="#E0E0E0"
+                    android:contentDescription="Preview Gambar" />
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/btn_update"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="16dp"
+                    android:text="UPDATE JURNAL" />
 
-                    <Button
-                        android:id="@+id/btn_batal"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:text="BATAL" />
+                <Button
+                    android:id="@+id/btn_delete_from_edit"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="HAPUS JURNAL"
+                    android:textColor="@android:color/holo_red_dark" />
 
-                    <Button
-                        android:id="@+id/btn_submit"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="SIMPAN" />
-                </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>
