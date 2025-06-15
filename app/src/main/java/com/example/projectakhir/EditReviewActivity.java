@@ -1,35 +1,34 @@
-// EditReviewActivity.java - Final version with camera capture support
 package com.example.projectakhir;
 
-import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.*;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class EditReviewActivity extends AppCompatActivity {
+
+    private static final int REQUEST_GALLERY = 101;
+    private static final int REQUEST_CAMERA = 102;
 
     private TextInputEditText etReview;
     private ImageView ivImagePreview;
@@ -37,296 +36,130 @@ public class EditReviewActivity extends AppCompatActivity {
 
     private Review review;
     private DatabaseReference reviewRef;
+    private FirebaseUser currentUser;
 
-    private static final int REQUEST_IMAGE_CAPTURE = 101;
-    private static final int REQUEST_IMAGE_PICK = 102;
-    private static final int REQUEST_PERMISSION = 103;
-
-    private String imagePathToSave = null;
-    private Uri cameraImageUri;
-    private boolean imageChanged = false;
-    private boolean hasImage = false;
+    private Bitmap selectedBitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_review);
 
-        initializeViews();
-        initializeFirebase();
-        loadReviewData();
-        setupClickListeners();
-        requestPermissions();
-    }
-
-    private void initializeViews() {
         etReview = findViewById(R.id.et_isi);
         ivImagePreview = findViewById(R.id.image_preview);
         btnCaptureImage = findViewById(R.id.btn_capture_image);
         btnDelete = findViewById(R.id.btn_delete);
         btnSubmit = findViewById(R.id.btn_submit);
-    }
 
-    private void initializeFirebase() {
-        reviewRef = FirebaseDatabase.getInstance("https://projectakhir-d24d3-default-rtdb.asia-southeast1.firebasedatabase.app/")
-                .getReference("reviews");
-    }
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Toast.makeText(this, "User belum login", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-    private void loadReviewData() {
         review = getIntent().getParcelableExtra("review");
-        if (review != null) {
-            etReview.setText(review.getReview());
-            imagePathToSave = review.getImagePath();
-            loadImagePreview();
-            updateButtonText();
+        if (review == null) {
+            Toast.makeText(this, "Data review tidak ditemukan", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
-    }
 
-    private void loadImagePreview() {
-        if (imagePathToSave != null && !imagePathToSave.isEmpty()) {
-            File file = new File(imagePathToSave);
-            if (file.exists()) {
-                Glide.with(this)
-                        .load(file)
-                        .placeholder(R.drawable.restoran)
-                        .into(ivImagePreview);
-                hasImage = true;
-                ivImagePreview.setVisibility(View.VISIBLE);
-            } else {
-                setDefaultImage();
-            }
-        } else {
-            setDefaultImage();
+        reviewRef = FirebaseDatabase.getInstance("https://projectakhir-d24d3-default-rtdb.asia-southeast1.firebasedatabase.app/")
+                .getReference("users").child(currentUser.getUid()).child("reviews");
+
+        etReview.setText(review.getReview());
+
+        // Tampilkan gambar jika ada Base64
+        if (review.getImagePath() != null && review.getImagePath().length() > 100) {
+            byte[] imageBytes = Base64.decode(review.getImagePath(), Base64.DEFAULT);
+            selectedBitmap = android.graphics.BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            ivImagePreview.setImageBitmap(selectedBitmap);
         }
-    }
 
-    private void setDefaultImage() {
-        ivImagePreview.setImageResource(R.drawable.restoran);
-        ivImagePreview.setVisibility(View.VISIBLE);
-        hasImage = false;
-    }
+        btnCaptureImage.setOnClickListener(v -> showImageSourceDialog());
 
-    private void updateButtonText() {
-        btnCaptureImage.setText(hasImage ? "Ganti/Hapus Gambar" : "Ambil Gambar dari Kamera");
-    }
-
-    private void setupClickListeners() {
-        btnCaptureImage.setOnClickListener(v -> {
-            if (hasImage) {
-                showImageOptionsDialog();
-            } else {
-                showImagePickerDialog();
+        btnSubmit.setOnClickListener(v -> {
+            String isi = etReview.getText().toString().trim();
+            if (isi.isEmpty()) {
+                Toast.makeText(this, "Isi review tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            review.setReview(isi);
+            review.setDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date()));
+
+            if (selectedBitmap != null) {
+                review.setImagePath(encodeImageToBase64(selectedBitmap));
+            }
+
+            reviewRef.child(review.getId()).setValue(review).addOnSuccessListener(unused -> {
+                Toast.makeText(this, "Review berhasil diupdate", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK);
+                finish();
+            }).addOnFailureListener(e -> Toast.makeText(this, "Gagal update review", Toast.LENGTH_SHORT).show());
         });
-
-        btnSubmit.setOnClickListener(v -> new AlertDialog.Builder(this)
-                .setTitle("Simpan Perubahan")
-                .setMessage("Apakah Anda yakin ingin menyimpan perubahan ini?")
-                .setPositiveButton("Ya", (dialog, which) -> updateReview())
-                .setNegativeButton("Batal", null)
-                .show());
 
         btnDelete.setOnClickListener(v -> new AlertDialog.Builder(this)
                 .setTitle("Hapus Review")
-                .setMessage("Apakah Anda yakin ingin menghapus review ini?")
-                .setPositiveButton("Ya", (dialog, which) -> deleteReview())
+                .setMessage("Yakin ingin menghapus review ini?")
+                .setPositiveButton("Ya", (dialog, which) -> {
+                    reviewRef.child(review.getId()).removeValue().addOnSuccessListener(unused -> {
+                        Toast.makeText(this, "Review dihapus", Toast.LENGTH_SHORT).show();
+                        setResult(RESULT_OK);
+                        finish();
+                    });
+                })
                 .setNegativeButton("Batal", null)
                 .show());
     }
 
-    private void showImageOptionsDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Pilih Aksi")
-                .setItems(new String[]{"Ganti Gambar", "Hapus Gambar"}, (dialog, which) -> {
-                    if (which == 0) showImagePickerDialog();
-                    else removeImage();
-                }).show();
-    }
-
-    private void showImagePickerDialog() {
+    private void showImageSourceDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Pilih Sumber Gambar")
-                .setItems(new String[]{"Kamera", "Galeri"}, (dialog, which) -> {
+                .setItems(new String[]{"Dari Kamera", "Dari Galeri"}, (dialog, which) -> {
                     if (which == 0) openCamera();
                     else openGallery();
                 }).show();
     }
 
     private void openCamera() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_PERMISSION);
-            return;
-        }
-
-        File imageFile = createImageFile();
-        if (imageFile != null) {
-            cameraImageUri = FileProvider.getUriForFile(this, getPackageName() + ".provider", imageFile);
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
-    private File createImageFile() {
-        try {
-            String fileName = "review_edited_" + new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-            File file = new File(getFilesDir(), fileName + ".jpg");
-            imagePathToSave = file.getAbsolutePath();
-            return file;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     private void openGallery() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION);
-            return;
-        }
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(galleryIntent, REQUEST_IMAGE_PICK);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_GALLERY);
     }
 
-    private void removeImage() {
-        if (imagePathToSave != null && !imagePathToSave.isEmpty()) {
-            File oldFile = new File(imagePathToSave);
-            if (oldFile.exists()) oldFile.delete();
-        }
-        imagePathToSave = null;
-        imageChanged = true;
-        hasImage = false;
-        setDefaultImage();
-        updateButtonText();
+    private String encodeImageToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        return Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && imagePathToSave != null) {
-                File file = new File(imagePathToSave);
-                if (file.exists()) {
-                    imageChanged = true;
-                    hasImage = true;
-                    Glide.with(this).load(file).placeholder(R.drawable.restoran).into(ivImagePreview);
-                    updateButtonText();
-                }
-            } else if (requestCode == REQUEST_IMAGE_PICK && data != null) {
+
+        if (resultCode == Activity.RESULT_OK && data != null) {
+            if (requestCode == REQUEST_GALLERY) {
                 Uri imageUri = data.getData();
-                try (InputStream stream = getContentResolver().openInputStream(imageUri)) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    if (bitmap != null) {
-                        if (imagePathToSave != null) {
-                            File old = new File(imagePathToSave);
-                            if (old.exists()) old.delete();
-                        }
-                        imagePathToSave = saveImageToInternalStorage(bitmap);
-                        imageChanged = true;
-                        hasImage = true;
-                        Glide.with(this).load(new File(imagePathToSave)).into(ivImagePreview);
-                        updateButtonText();
-                    }
+                try {
+                    selectedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    ivImagePreview.setImageBitmap(selectedBitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(this, "Gagal mengambil gambar", Toast.LENGTH_SHORT).show();
+                }
+            } else if (requestCode == REQUEST_CAMERA) {
+                Bundle extras = data.getExtras();
+                if (extras != null) {
+                    selectedBitmap = (Bitmap) extras.get("data");
+                    ivImagePreview.setImageBitmap(selectedBitmap);
                 }
             }
-        }
-    }
-
-    private String saveImageToInternalStorage(Bitmap bitmap) {
-        try {
-            File file = new File(getFilesDir(), "review_edited_" + System.currentTimeMillis() + ".jpg");
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-            out.close();
-            return file.getAbsolutePath();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void updateReview() {
-        String updatedText = etReview.getText().toString().trim();
-        if (updatedText.isEmpty()) {
-            Toast.makeText(this, "Isi review tidak boleh kosong", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        review.setReview(updatedText);
-        review.setImagePath(imagePathToSave);
-
-        if (review.getId() != null) {
-            reviewRef.child(review.getId()).setValue(review).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("updated_review", review);
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
-                } else {
-                    Toast.makeText(this, "Gagal memperbarui review", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private void deleteReview() {
-        if (review.getId() != null) {
-            if (review.getImagePath() != null) {
-                File file = new File(review.getImagePath());
-                if (file.exists()) file.delete();
-            }
-            reviewRef.child(review.getId()).removeValue().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("deleted_review_id", review.getId());
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
-                } else {
-                    Toast.makeText(this, "Gagal menghapus review", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private void requestPermissions() {
-        String[] permissions = {
-                Manifest.permission.CAMERA,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION) {
-            boolean allGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
-                }
-            }
-            if (!allGranted) {
-                Toast.makeText(this, "Izin diperlukan untuk menggunakan fitur gambar", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        String currentText = etReview.getText().toString().trim();
-        if (!currentText.equals(review.getReview()) || imageChanged) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Perubahan Belum Disimpan")
-                    .setMessage("Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin keluar?")
-                    .setPositiveButton("Ya", (dialog, which) -> super.onBackPressed())
-                    .setNegativeButton("Batal", null)
-                    .show();
-        } else {
-            super.onBackPressed();
         }
     }
 }

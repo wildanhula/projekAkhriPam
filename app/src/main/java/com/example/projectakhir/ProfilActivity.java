@@ -4,28 +4,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
+import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +40,7 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         // Inisialisasi view
         tvNamaLengkap = findViewById(R.id.tv_namalengkap);
         tvStatus = findViewById(R.id.tv_status);
-        tvDeskripsi = findViewById(R.id.tv_deskripsi); // pastikan kamu punya TextView ini di layout
+        tvDeskripsi = findViewById(R.id.tv_deskripsi);
         profileImage = findViewById(R.id.imageView3);
         btnEdit = findViewById(R.id.bt_edit);
         btnLogout = findViewById(R.id.bt_logout);
@@ -69,18 +58,11 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         // Setup RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         reviewList = new ArrayList<>();
-        reviewList.add(new Review("1", "2025/04/06 19:30:38", "Baklava",
-                "Rasanya manis bikin gigi ngilu, Tapi rasanya tetep enak kok!",
-                "Baklava", R.drawable.baklava));
-        reviewList.add(new Review("2", "2025/04/06 19:32:04", "Coklat",
-                "Coklat terfavorit banyak rasa",
-                "Coklat", R.drawable.coklat));
-        reviewList.add(new Review("3", "2025/04/06 19:32:04", "Bakwan",
-                "Bakwan rasa yang mantap sekali",
-                "Bakwan", R.drawable.bakwan));
-
         reviewAdapter = new ReviewAdapter(reviewList, this);
         recyclerView.setAdapter(reviewAdapter);
+
+        // Load review dari Firebase
+        loadReviewsFromFirebase();
 
         // Tombol Edit Profil
         btnEdit.setOnClickListener(v -> {
@@ -111,7 +93,7 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         // FAB Tambah Review
         fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(ProfilActivity.this, AddReviewActivity.class);
-            startActivityForResult(intent, 2);
+            startActivity(intent); // tidak pakai forResult, karena data langsung masuk ke Firebase
         });
 
         setupBottomNavigation();
@@ -135,18 +117,10 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
                         tvDeskripsi.setText(deskripsi);
 
                         if (fotoUrl != null && !fotoUrl.isEmpty()) {
-                            // Cek apakah ini URI lokal atau URL online
-                            if (fotoUrl.startsWith("content://") || fotoUrl.startsWith("file://")) {
-                                Glide.with(ProfilActivity.this)
-                                        .load(Uri.parse(fotoUrl))
-                                        .circleCrop()
-                                        .into(profileImage);
-                            } else {
-                                Glide.with(ProfilActivity.this)
-                                        .load(fotoUrl)
-                                        .circleCrop()
-                                        .into(profileImage);
-                            }
+                            Glide.with(ProfilActivity.this)
+                                    .load(Uri.parse(fotoUrl))
+                                    .circleCrop()
+                                    .into(profileImage);
                         }
                     }
                 }
@@ -159,6 +133,31 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         }
     }
 
+    private void loadReviewsFromFirebase() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            mDatabase.child(uid).child("reviews").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    reviewList.clear();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Review review = dataSnapshot.getValue(Review.class);
+                        if (review != null) {
+                            reviewList.add(0, review);
+                        }
+                    }
+                    reviewAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(ProfilActivity.this, "Gagal memuat review", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     @Override
     public void onReviewClick(Review review, int position) {
         showEditDialog(review, position);
@@ -166,16 +165,16 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
 
     @Override
     public void onDeleteClick(Review review, int position) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Review")
-                .setMessage("Are you sure you want to delete this review?")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    reviewList.remove(position);
-                    reviewAdapter.notifyItemRemoved(position);
-                    Toast.makeText(this, "Review deleted", Toast.LENGTH_SHORT).show();
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            mDatabase.child(uid).child("reviews").child(review.getId()).removeValue()
+                    .addOnSuccessListener(unused -> {
+                        reviewList.remove(position);
+                        reviewAdapter.notifyItemRemoved(position);
+                        Toast.makeText(this, "Review deleted", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
     @Override
@@ -183,20 +182,9 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         Toast.makeText(this, "Review updated at position " + position, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onLikeClick(Review review, int position) {
-
-    }
-
-    @Override
-    public void onShareClick(Review review, int position) {
-
-    }
-
-    @Override
-    public void onBookmarkClick(Review review, int position) {
-
-    }
+    @Override public void onLikeClick(Review review, int position) {}
+    @Override public void onShareClick(Review review, int position) {}
+    @Override public void onBookmarkClick(Review review, int position) {}
 
     private void showEditDialog(Review review, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -212,52 +200,24 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
             String newReview = etReview.getText().toString().trim();
             if (!newReview.isEmpty()) {
                 review.setReview(newReview);
-                reviewAdapter.notifyItemChanged(position);
-                Toast.makeText(this, "Review updated", Toast.LENGTH_SHORT).show();
+                review.updateDate(); // update tanggal edit
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    String uid = user.getUid();
+                    mDatabase.child(uid).child("reviews").child(review.getId()).setValue(review)
+                            .addOnSuccessListener(unused -> {
+                                reviewAdapter.notifyItemChanged(position);
+                                Toast.makeText(this, "Review updated", Toast.LENGTH_SHORT).show();
+                            });
+                }
             } else {
-                Toast.makeText(this, "Review cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Review tidak boleh kosong", Toast.LENGTH_SHORT).show();
             }
         });
 
         builder.setNegativeButton("Cancel", null);
         builder.create().show();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && data != null) {
-            if (requestCode == 1) {
-                String updatedNama = data.getStringExtra("nama_baru");
-                String updatedStatus = data.getStringExtra("status_baru");
-                String updatedDeskripsi = data.getStringExtra("deskripsi_baru");
-                String updatedFotoUrl = data.getStringExtra("fotoUrl_baru");
-
-                if (updatedNama != null) tvNamaLengkap.setText(updatedNama);
-                if (updatedStatus != null) tvStatus.setText(updatedStatus);
-                if (updatedDeskripsi != null) tvDeskripsi.setText(updatedDeskripsi);
-                if (updatedFotoUrl != null && !updatedFotoUrl.isEmpty()) {
-                    Glide.with(this)
-                            .load(updatedFotoUrl)
-                            .circleCrop()
-                            .into(profileImage);
-                }
-            } else if (requestCode == 2) {
-                Review newReview = new Review(
-                        data.getStringExtra("id"),
-                        data.getStringExtra("date"),
-                        data.getStringExtra("title"),
-                        data.getStringExtra("review"),
-                        data.getStringExtra("menu"),
-                        data.getIntExtra("imageRes", R.drawable.ic_user)
-                );
-
-                reviewList.add(0, newReview);
-                reviewAdapter.notifyItemInserted(0);
-                recyclerView.smoothScrollToPosition(0);
-            }
-        }
     }
 
     private void setupBottomNavigation() {
@@ -270,31 +230,24 @@ public class ProfilActivity extends AppCompatActivity implements ReviewAdapter.O
         profileIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_dark));
 
         homeIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            startActivity(new Intent(this, MainActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             finish();
         });
 
-        notificationIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show();
-        });
+        notificationIcon.setOnClickListener(v -> Toast.makeText(this, "Notification clicked", Toast.LENGTH_SHORT).show());
 
         journalIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, JournalActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            startActivity(new Intent(this, JournalActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
             finish();
         });
 
         saveIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfilActivity.this, FavoriteActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, FavoriteActivity.class));
             finish();
         });
 
-        profileIcon.setOnClickListener(v -> {
-            // Sudah di halaman profil
-        });
+        profileIcon.setOnClickListener(v -> { /* sudah di profil */ });
     }
 }

@@ -67,5 +67,30 @@
             android:text="SIMPAN REVIEW"
             android:backgroundTint="@color/orange"
             android:textColor="@android:color/white"/>
+        <!-- Upload Gambar -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gambar Review"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <ImageView
+            android:id="@+id/img_review"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Gambar Review" />
+
+        <Button
+            android:id="@+id/btn_pilih_gambar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pilih Gambar dari Galeri"
+            android:layout_marginBottom="16dp" />
+
     </LinearLayout>
+
 </ScrollView>

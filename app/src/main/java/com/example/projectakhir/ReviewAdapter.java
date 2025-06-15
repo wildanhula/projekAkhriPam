@@ -4,21 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
+
     private List<Review> reviewList;
     private OnReviewClickListener listener;
     private static final int REQUEST_EDIT_REVIEW = 1001;
@@ -54,35 +52,44 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         holder.textReview.setText(review.getReview());
         holder.textMenu.setText("Menu: " + review.getMenu());
 
-        if (review.hasCustomImage()) {
-            loadCustomImage(holder.imageGambar, review.getImagePath());
-        } else {
+        // Tampilkan gambar dari Base64 jika ada
+        if (review.getImagePath() != null && review.getImagePath().length() > 100) {
+            loadBase64Image(holder.imageGambar, review.getImagePath());
+            holder.imageGambar.setVisibility(View.VISIBLE);
+        }
+        // Jika tidak ada Base64 tapi ada drawable bawaan
+        else if (review.getImageRes() != 0) {
             holder.imageGambar.setImageResource(review.getImageRes());
+            holder.imageGambar.setVisibility(View.VISIBLE);
+        }
+        // Tidak ada gambar
+        else {
+            holder.imageGambar.setVisibility(View.GONE);
         }
 
-        // Set status dan listener untuk tombol Like
+        // Tombol Like
         if (holder.btnLike != null) {
             holder.btnLike.setSelected(review.isLiked());
             holder.btnLike.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onLikeClick(review, position);
-                    notifyItemChanged(position); // Refresh icon
+                    notifyItemChanged(position);
                 }
             });
         }
 
-        // Set status dan listener untuk tombol Bookmark
+        // Tombol Bookmark
         if (holder.btnBookmark != null) {
             holder.btnBookmark.setSelected(review.isBookmarked());
             holder.btnBookmark.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onBookmarkClick(review, position);
-                    notifyItemChanged(position); // Refresh icon
+                    notifyItemChanged(position);
                 }
             });
         }
 
-        // Listener tombol Share
+        // Tombol Share
         if (holder.btnShare != null) {
             holder.btnShare.setOnClickListener(v -> {
                 if (listener != null) {
@@ -96,7 +103,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             holder.tvLikeCount.setText(String.valueOf(review.getLikeCount()));
         }
 
-        // Edit
+        // Klik item untuk edit
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 Intent intent = new Intent(v.getContext(), EditReviewActivity.class);
@@ -106,7 +113,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             }
         });
 
-        // Delete
+        // Klik lama untuk delete
         holder.itemView.setOnLongClickListener(v -> {
             if (listener != null) {
                 listener.onDeleteClick(review, position);
@@ -116,27 +123,21 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         });
     }
 
-    private void loadCustomImage(ImageView imageView, String imagePath) {
-        if (imagePath == null || imagePath.trim().isEmpty()) {
-            imageView.setImageResource(R.drawable.restoran);
-            return;
-        }
-
+    /**
+     * Fungsi untuk decode gambar dari Base64 dan menampilkannya di ImageView.
+     */
+    private void loadBase64Image(ImageView imageView, String imageBase64) {
         try {
-            File file = new File(imagePath);
-            if (file.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    imageView.setImageResource(R.drawable.restoran);
-                }
+            byte[] decodedBytes = Base64.decode(imageBase64, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
             } else {
                 imageView.setImageResource(R.drawable.restoran);
             }
         } catch (Exception e) {
-            imageView.setImageResource(R.drawable.restoran);
             e.printStackTrace();
+            imageView.setImageResource(R.drawable.restoran);
         }
     }
 
